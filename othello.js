@@ -33,15 +33,19 @@ const App = function(props) {
         setLomake(uusilomake);
     };
 
+    let handleSubmit = function(event) {
+        event.preventDefault();
+        console.log(event, lomake);
+    };
+
     /* jshint ignore: start */
     return (
         <div>
             <h1>Othello</h1>
             <Lomake
-                pelaaja1={lomake.pelaaja1}
-                pelaaja2={lomake.pelaaja2}
-                kentanKoko={lomake.kentanKoko}
+                lomake={lomake}
                 change={handleChange}
+                tallenna={handleSubmit}
             />
         </div>
     )
@@ -51,6 +55,10 @@ const App = function(props) {
 // ----------- lomake ------------
 
 const Lomake = function(props) {
+    let tallenna = function (event) {
+        event.preventDefault();
+        props.tallenna(event);
+    };
     /* jshint ignore: start */
     return (
         <div>
@@ -61,14 +69,14 @@ const Lomake = function(props) {
                         <input
                             type="text"
                             id="pelaaja1"
-                            value={props.pelaaja1}
+                            value={props.lomake.pelaaja1}
                             onChange={props.change}/>
                     </label>
                     <label>Pelaaja 2
                         <input
                             type="text"
                             id="pelaaja2"
-                            value={props.pelaaja2}
+                            value={props.lomake.pelaaja2}
                             onChange={props.change}/>
                     </label>
                 </fieldset>
@@ -78,10 +86,11 @@ const Lomake = function(props) {
                         type="range"
                         id="kentanKoko"
                         min="4" max="16"
-                        value={props.kentanKoko}
+                        value={props.lomake.kentanKoko}
                         onChange={props.change}/>
                     <label>Valittu koko: {props.kentanKoko}</label>
                 </fieldset>
+                <button onClick={tallenna}>Pelaamaan!</button>
             </form>
         </div>
     )
