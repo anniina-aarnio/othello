@@ -93,7 +93,7 @@ const Lomake = function(props) {
                         min="4" max="16"
                         value={props.lomake.kentanKoko}
                         onChange={props.change}/>
-                    <label>Valittu koko: {props.kentanKoko}</label>
+                    <label>Valittu koko: {props.lomake.kentanKoko}x{props.lomake.kentanKoko}</label>
                 </fieldset>
                 <button onClick={tallenna}>Pelaamaan!</button>
             </form>
