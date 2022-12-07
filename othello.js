@@ -19,12 +19,28 @@ const App = function(props) {
 
         // jos kyseessä on tekstikenttä
         if (obj.type == "text") {
+            uusilomake[obj.id] = obj.value;
+            // jos tyhjä
             if (obj.value.trim() == "") {
                 obj.setCustomValidity("Kirjoita vähintään yksi merkki (ei välilyönti");
-            } else {
+            }
+            // jos kaikki kunnossa, custom validity tyhjennetään
+            else {
                 obj.setCustomValidity("");
             }
-            uusilomake[obj.id] = obj.value;
+
+            let pelaajakentat = event.target.form["nimi"];
+            // tarkistetaan vielä onko samat nimet...
+            if (uusilomake.pelaaja1.trim() == uusilomake.pelaaja2.trim()) {
+                for (let pk of pelaajakentat) {
+                    pk.setCustomValidity("Valitse eri nimi kuin toisella pelaajalla");
+                }
+            } else {
+                for (let pk of pelaajakentat) {
+                    pk.setCustomValidity("");
+                }
+            }
+
         // jos kyseessä on kentän kokoa muokkaava slideri
         } else {
             uusilomake[obj.id] = obj.value;
@@ -44,6 +60,9 @@ const App = function(props) {
             event.target.form.reportValidity();
             return;
         }
+        let uusilomake = {...lomake};
+        uusilomake.pelaaja1 = lomake.pelaaja1.trim();
+        uusilomake.pelaaja2 = lomake.pelaaja2.trim();
         console.log(event, lomake);
     };
 
@@ -83,6 +102,7 @@ const Lomake = function(props) {
                         <input
                             type="text"
                             id="pelaaja1"
+                            name="nimi"
                             value={props.lomake.pelaaja1}
                             onChange={props.change}
                             required="required"/>
@@ -91,6 +111,7 @@ const Lomake = function(props) {
                         <input
                             type="text"
                             id="pelaaja2"
+                            name="nimi"
                             value={props.lomake.pelaaja2}
                             onChange={props.change}
                             required="required"/>
