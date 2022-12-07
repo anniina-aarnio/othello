@@ -15,7 +15,7 @@ function App(props) {
      * Käsittelee inputin muutostapahtumat lomakkeessa
      * @param {Event} event 
      */
-    let handleChange = function(event) {
+    let handleChangeLomake = function(event) {
         let uusilomake = {...lomake};
         let obj = event.target;
 
@@ -55,7 +55,7 @@ function App(props) {
      * Mitä tekee, kun tallentaa lomakkeen (formin napin painallus)
      * @param {Event} event 
      */
-    let handleSubmit = function(event) {
+    let handleSubmitLomake = function(event) {
         event.preventDefault();
         // jos lomakkeessa on jotain validity-virheitä, ei jatka
         if (!event.target.form.checkValidity()) {
@@ -81,9 +81,11 @@ function App(props) {
             <PiiloutuvaLomake
                 pelitila={pelitila}
                 lomake={lomake}
-                change={handleChange}
-                tallenna={handleSubmit}
+                change={handleChangeLomake}
+                tallenna={handleSubmitLomake}
             />
+            <Pelilauta
+                koko={lomake.kentanKoko}/>
         </div>
     )
     /* jshint ignore: end */
@@ -143,6 +145,13 @@ function Lomake(props) {
     /* jshint ignore: end */
 }
 
+/**
+ * Luo piiloutuvan lomakkeen, joka
+ * näyttää lomakkeen, jos ei olla pelitilassa ja
+ * piilottaa lomakkeen, kun se on asianmukaisesti täytetty ja lähetetty
+ * @param {Object} props 
+ * @returns piiloutuva lomake
+ */
 function PiiloutuvaLomake(props) {
 
     /* jshint ignore: start */
@@ -164,7 +173,40 @@ function PiiloutuvaLomake(props) {
 
 // ----------- pelilauta -----------
 
+function Pelilauta(props) {
 
+    /* jshint ignore: start */
+    let riveja = [];
+    for (let i = 0; i < props.koko; i++) {
+        riveja.push(<Rivi key={i} koko={props.koko} />)
+    }
+    
+    return (
+        <div>
+            {riveja}
+        </div>
+    )
+    /* jshint ignore: end */
+}
+
+function Rivi(props) {
+    
+    /* jshint ignore: start */
+    let osia = [];
+    for (let i = 0; i < props.koko; i++) {
+        osia.push(<Osa key={i} />)
+    }
+    return (
+        <div>{osia}</div>
+    )
+    /* jshint ignore: end */
+}
+
+function Osa(props) {
+    /* jshint ignore: start */
+    return (<label>[ ]</label>)
+    /* jshint ignore: end */
+}
 
 // ----------- roottiin lisääminen -----------
 
