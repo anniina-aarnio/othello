@@ -89,7 +89,7 @@ function App(props) {
     /* jshint ignore: end */
 }
 
-// ----------- lomake ------------
+// ----------- lomake -----------
 
 /**
  * Luo lomakkeen annetuilla tiedoilla
@@ -161,6 +161,12 @@ function PiiloutuvaLomake(props) {
     /* jshint ignore: end */
 }
 
+
+// ----------- pelilauta -----------
+
+
+
+// ----------- roottiin lisääminen -----------
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
