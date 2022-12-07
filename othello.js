@@ -25,9 +25,9 @@ const App = function(props) {
                 obj.setCustomValidity("");
             }
             uusilomake[obj.id] = obj.value;
-        // jos kyseessä on slideri
+        // jos kyseessä on kentän kokoa muokkaava slideri
         } else {
-            
+            uusilomake[obj.id] = obj.value;
         }
         
         setLomake(uusilomake);
@@ -74,7 +74,12 @@ const Lomake = function(props) {
                 </fieldset>
                 <fieldset>
                     <legend>Kentän koko</legend>
-                    <input type="range" min="4" max="16" onChange={props.change}/>
+                    <input
+                        type="range"
+                        id="kentanKoko"
+                        min="4" max="16"
+                        value={props.kentanKoko}
+                        onChange={props.change}/>
                     <label>Valittu koko: {props.kentanKoko}</label>
                 </fieldset>
             </form>
