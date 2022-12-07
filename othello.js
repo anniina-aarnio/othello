@@ -3,14 +3,34 @@
 /* globals React: false */
 
 const App = function(props) {
-    const [state, setState] = React.useState( {
-        pelaaja1: "",
-        pelaaja2: "",
-        kentanKoko: 4
+    const [lomake, setLomake] = React.useState( {
+        "pelaaja1": "",
+        "pelaaja2": "",
+        "kentanKoko": 4
     });
 
+    /**
+     * Käsittelee inputin muutostapahtumat lomakkeessa
+     * @param {Event} event 
+     */
     let handleChange = function(event) {
-        console.log(event.target);
+        let uusilomake = {...lomake};
+        let obj = event.target;
+        console.log("handleChange:", uusilomake, obj);
+        // jos kyseessä on tekstikenttä
+        if (obj.type == "text") {
+            if (obj.value.trim() == "") {
+                obj.setCustomValidity("Kirjoita vähintään yksi merkki (ei välilyönti");
+            } else {
+                obj.setCustomValidity("");
+            }
+            uusilomake[obj.id] = obj.value;
+        // jos kyseessä on slideri
+        } else {
+            
+        }
+        
+        setLomake(uusilomake);
     };
 
     /* jshint ignore: start */
@@ -18,9 +38,9 @@ const App = function(props) {
         <div>
             <h1>Othello</h1>
             <Lomake
-                pelaaja1={state.pelaaja1}
-                pelaaja2={state.pelaaja2}
-                kentanKoko={state.kentanKoko}
+                pelaaja1={lomake.pelaaja1}
+                pelaaja2={lomake.pelaaja2}
+                kentanKoko={lomake.kentanKoko}
                 change={handleChange}
             />
         </div>
@@ -37,20 +57,24 @@ const Lomake = function(props) {
             <form>
                 <fieldset>
                     <legend>Pelaajat</legend>
-                    <LabelAndTextInput
-                        type="text"
-                        inputText={props.pelaaja1}
-                        labelText="Pelaaja 1"
-                        change={props.change} />
-                    <LabelAndTextInput
-                        type="text"
-                        inputText={props.pelaaja2}
-                        labelText="Pelaaja 2"
-                        change={props.change} />
+                    <label>Pelaaja 1
+                        <input
+                            type="text"
+                            id="pelaaja1"
+                            value={props.pelaaja1}
+                            onChange={props.change}/>
+                    </label>
+                    <label>Pelaaja 2
+                        <input
+                            type="text"
+                            id="pelaaja2"
+                            value={props.pelaaja2}
+                            onChange={props.change}/>
+                    </label>
                 </fieldset>
                 <fieldset>
                     <legend>Kentän koko</legend>
-                    <input type="range" min="4" max="16" />
+                    <input type="range" min="4" max="16" onChange={props.change}/>
                     <label>Valittu koko: {props.kentanKoko}</label>
                 </fieldset>
             </form>
@@ -59,16 +83,6 @@ const Lomake = function(props) {
     /* jshint ignore: end */
 };
 
-const LabelAndTextInput = function(props) {
-    /* jshint ignore: start */
-    return (
-        <label>
-            {props.labelText}
-            <input type={props.type} value={props.inputText} onChange={props.change} />
-        </label>
-    )
-    /* jshint ignore: end */
-};
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
