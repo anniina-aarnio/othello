@@ -16,7 +16,7 @@ const App = function(props) {
     let handleChange = function(event) {
         let uusilomake = {...lomake};
         let obj = event.target;
-        console.log("handleChange:", uusilomake, obj);
+
         // jos kyseessä on tekstikenttä
         if (obj.type == "text") {
             if (obj.value.trim() == "") {
@@ -33,8 +33,17 @@ const App = function(props) {
         setLomake(uusilomake);
     };
 
+    /**
+     * Mitä tekee, kun tallentaa lomakkeen
+     * @param {Event} event 
+     */
     let handleSubmit = function(event) {
         event.preventDefault();
+        if (!event.target.form.checkValidity()) {
+            console.log("virhe");
+            event.target.form.reportValidity();
+            return;
+        }
         console.log(event, lomake);
     };
 
@@ -75,14 +84,16 @@ const Lomake = function(props) {
                             type="text"
                             id="pelaaja1"
                             value={props.lomake.pelaaja1}
-                            onChange={props.change}/>
+                            onChange={props.change}
+                            required="required"/>
                     </label>
                     <label>Pelaaja 2
                         <input
                             type="text"
                             id="pelaaja2"
                             value={props.lomake.pelaaja2}
-                            onChange={props.change}/>
+                            onChange={props.change}
+                            required="required"/>
                     </label>
                 </fieldset>
                 <fieldset>
