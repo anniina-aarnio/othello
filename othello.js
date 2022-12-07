@@ -2,12 +2,14 @@
 /* globals ReactDOM: false */
 /* globals React: false */
 
-const App = function(props) {
+function App(props) {
     const [lomake, setLomake] = React.useState( {
         "pelaaja1": "",
         "pelaaja2": "",
         "kentanKoko": 4
     });
+
+    const [pelitila, setPelitila] = React.useState(false);
 
     /**
      * Käsittelee inputin muutostapahtumat lomakkeessa
@@ -50,20 +52,26 @@ const App = function(props) {
     };
 
     /**
-     * Mitä tekee, kun tallentaa lomakkeen
+     * Mitä tekee, kun tallentaa lomakkeen (formin napin painallus)
      * @param {Event} event 
      */
     let handleSubmit = function(event) {
         event.preventDefault();
+        // jos lomakkeessa on jotain validity-virheitä, ei jatka
         if (!event.target.form.checkValidity()) {
             console.log("virhe");
             event.target.form.reportValidity();
             return;
         }
+
+        // kaikki kunnossa, joten jatkuu
         let uusilomake = {...lomake};
         uusilomake.pelaaja1 = lomake.pelaaja1.trim();
         uusilomake.pelaaja2 = lomake.pelaaja2.trim();
-        console.log(event, lomake);
+        setLomake(uusilomake);
+        
+        // muutetaan pelitila
+        setPelitila(true);
     };
 
     /* jshint ignore: start */
@@ -71,6 +79,7 @@ const App = function(props) {
         <div>
             <h1>Othello</h1>
             <PiiloutuvaLomake
+                pelitila={pelitila}
                 lomake={lomake}
                 change={handleChange}
                 tallenna={handleSubmit}
@@ -78,7 +87,7 @@ const App = function(props) {
         </div>
     )
     /* jshint ignore: end */
-};
+}
 
 // ----------- lomake ------------
 
@@ -87,7 +96,7 @@ const App = function(props) {
  * @param {Object} props 
  * @returns komponentin osat html/jsx-muodossa
  */
-const Lomake = function(props) {
+function Lomake(props) {
     let tallenna = function (event) {
         event.preventDefault();
         props.tallenna(event);
@@ -132,15 +141,25 @@ const Lomake = function(props) {
         </div>
     )
     /* jshint ignore: end */
-};
+}
 
-const PiiloutuvaLomake = function(props) {
+function PiiloutuvaLomake(props) {
+
     /* jshint ignore: start */
+    if (!props.pelitila) {
+        return (
+            <Lomake
+            lomake={props.lomake}
+            change={props.change} 
+            tallenna={props.tallenna}/>
+        )
+    }
+
     return (
-        <Lomake lomake={props.lomake} change={props.change} tallenna={props.tallenna}/>
+        <h2>Let's play!</h2>
     )
     /* jshint ignore: end */
-};
+}
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
