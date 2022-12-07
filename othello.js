@@ -42,7 +42,7 @@ const App = function(props) {
     return (
         <div>
             <h1>Othello</h1>
-            <Lomake
+            <PiiloutuvaLomake
                 lomake={lomake}
                 change={handleChange}
                 tallenna={handleSubmit}
@@ -54,6 +54,11 @@ const App = function(props) {
 
 // ----------- lomake ------------
 
+/**
+ * Luo lomakkeen annetuilla tiedoilla
+ * @param {Object} props 
+ * @returns komponentin osat html/jsx-muodossa
+ */
 const Lomake = function(props) {
     let tallenna = function (event) {
         event.preventDefault();
@@ -93,6 +98,14 @@ const Lomake = function(props) {
                 <button onClick={tallenna}>Pelaamaan!</button>
             </form>
         </div>
+    )
+    /* jshint ignore: end */
+};
+
+const PiiloutuvaLomake = function(props) {
+    /* jshint ignore: start */
+    return (
+        <Lomake lomake={props.lomake} change={props.change} tallenna={props.tallenna}/>
     )
     /* jshint ignore: end */
 };
