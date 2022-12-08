@@ -86,6 +86,9 @@ function App(props) {
             />
             <Pelilauta
                 koko={lomake.kentanKoko}/>
+            <Pelinappulat
+                pelaaja1={lomake.pelaaja1}
+                pelaaja2={lomake.pelaaja2}/>
         </div>
     )
     /* jshint ignore: end */
@@ -180,21 +183,26 @@ function Pelilauta(props) {
     for (let i = 0; i < props.koko; i++) {
         let rivi = [];
         for (let j = 0; j < props.koko; j++) {
-            rivi.push("");
+            rivi.push(" ");
         }
         tyhjaTaulukko.push(rivi);
     }
-    
+
     const [ruudut, setRuudut] = React.useState(tyhjaTaulukko);
 
     /* jshint ignore: start */
     let riveja = [];
     for (let i = 0; i < props.koko; i++) {
-        riveja.push(<Rivi key={i} koko={props.koko} rivi={i} />)
+        riveja.push(
+            <Rivi
+                key={i}
+                rivi={i}
+                sisallot={ruudut[i]} />
+        )
     }
     
     return (
-        <div>
+        <div id="pelilauta">
             {riveja}
         </div>
     )
@@ -205,8 +213,12 @@ function Rivi(props) {
     
     /* jshint ignore: start */
     let osia = [];
-    for (let i = 0; i < props.koko; i++) {
-        osia.push(<Osa key={props.rivi + i} />)
+    for (let i = 0; i < props.sisallot.length; i++) {
+        osia.push(
+            <Osa
+                key={props.rivi + i}
+                sisalto={props.sisallot[i]}
+            />)
     }
     return (
         <div>{osia}</div>
@@ -216,8 +228,27 @@ function Rivi(props) {
 
 function Osa(props) {
     /* jshint ignore: start */
-    return (<label className="peliruutu">[ ]</label>)
+    return (<label className="peliruutu">[{props.sisalto}]</label>)
     /* jshint ignore: end */
+}
+
+// ----------- pelilaudan sivun asiat -----------
+
+function Pelinappulat(props) {
+    /* jshint ignore:start */
+    return (
+        <div id="sivuosa">
+            <div>
+                <label>{props.pelaaja1}</label>
+                <label>X</label>
+            </div>
+            <div>
+                <label>{props.pelaaja2}</label>
+                <label>O</label>
+            </div>
+        </div>
+    )
+    /* jshint ignore:end */
 }
 
 // ----------- roottiin lisääminen -----------

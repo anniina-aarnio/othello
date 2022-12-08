@@ -7,11 +7,20 @@ h1 {
 }
 
 /* Pelilauta */
-
+#pelialuta {
+    display: block;
+    align-self: center;
+}
 
 
 
 /* Peliruutu */
 .peliruutu {
     margin: .5em;
+}
+
+/* Pelilaudan vieressä */
+
+#sivuosa {
+    float: right;
 }
