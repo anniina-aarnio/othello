@@ -85,6 +85,7 @@ function App(props) {
                 tallenna={handleSubmitLomake}
             />
             <Pelikokonaisuus
+                pelitila={pelitila}
                 koko={lomake.kentanKoko}
                 pelaaja1={lomake.pelaaja1}
                 pelaaja2={lomake.pelaaja2} />
@@ -178,17 +179,24 @@ function PiiloutuvaLomake(props) {
 
 function Pelikokonaisuus(props) {
     /* jshint ignore:start*/
-    return (
-        <div>
-            <Pelilauta
-                koko={props.koko}/>
-            <Pelinappulat
-                pelaaja1={props.pelaaja1}
-                pelaaja2={props.pelaaja2}/>
-        </div>
-    )
-    /* jshint ignore:end*/
+    if (props.pelitila) {
+        return (
+            <div id="pelikokonaisuus">
+                <Pelilauta
+                    koko={props.koko}/>
+                <PelilaudanSivu
+                    pelaaja1={props.pelaaja1}
+                    pelaaja2={props.pelaaja2}/>
+            </div>
+        )
+    }
+    else {
+        return (
+            <div></div>
+        )
+    }
 
+    /* jshint ignore:end*/
 }
 
 
@@ -253,19 +261,44 @@ function Osa(props) {
 
 // ----------- pelilaudan sivun asiat -----------
 
-function Pelinappulat(props) {
+function PelilaudanSivu(props) {
     /* jshint ignore:start */
     return (
         <div id="sivuosa">
-            <div>
-                <label>{props.pelaaja1}</label>
-                <label>X</label>
-            </div>
-            <div>
-                <label>{props.pelaaja2}</label>
-                <label>O</label>
-            </div>
+            <PelaajanTiedot
+                pelaaja={props.pelaaja1}
+                pisteet="0"
+                color="musta"
+                merkki="X"/>
+            <PelaajanTiedot
+                pelaaja={props.pelaaja2}
+                pisteet="0"
+                color="valkoinen"
+                merkki="O"/>
+
+
         </div>
+    )
+    /* jshint ignore:end */
+}
+
+function PelaajanTiedot(props) {
+    /* jshint ignore:start */
+    return (
+        <div id="pelaajatiedot">
+            <label>{props.pelaaja}</label>
+            <label>Pisteet:{props.pisteet}</label>
+            <Pelimerkki color={props.color} merkki={props.merkki}/>
+        </div>
+
+    )
+    /* jshint ignore:end */
+}
+
+function Pelimerkki(props) {
+    /* jshint ignore:start */
+    return (
+        <label className={props.color}>{props.merkki}</label>
     )
     /* jshint ignore:end */
 }
