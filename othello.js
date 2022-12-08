@@ -286,9 +286,15 @@ function PelaajanTiedot(props) {
     /* jshint ignore:start */
     return (
         <div id="pelaajatiedot">
-            <label>{props.pelaaja}</label>
-            <label>Pisteet:{props.pisteet}</label>
-            <Pelimerkki color={props.color} merkki={props.merkki}/>
+            <div>
+                <label>{props.pelaaja}</label>
+            </div>
+            <div>
+                <label>Pisteet:{props.pisteet}</label>
+            </div>
+            <div>
+                <Pelimerkki color={props.color} merkki={props.merkki}/>
+            </div>
         </div>
 
     )
