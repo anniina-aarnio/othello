@@ -7,9 +7,14 @@ h1 {
 }
 
 /* Pelilauta */
-#pelialuta {
-    display: block;
+#pelilauta {
+    display: inline-block;
     align-self: center;
+}
+
+#pelilauta > div {
+    display: block;
+    width: fit-content;
 }
 
 
@@ -22,5 +27,12 @@ h1 {
 /* Pelilaudan vieressä */
 
 #sivuosa {
+    border: 1px solid white;
+    width: 5em;
     float: right;
+}
+
+#sivuosa > div {
+    display: block;
+    padding: 1em;
 }

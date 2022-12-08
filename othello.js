@@ -84,11 +84,10 @@ function App(props) {
                 change={handleChangeLomake}
                 tallenna={handleSubmitLomake}
             />
-            <Pelilauta
-                koko={lomake.kentanKoko}/>
-            <Pelinappulat
+            <Pelikokonaisuus
+                koko={lomake.kentanKoko}
                 pelaaja1={lomake.pelaaja1}
-                pelaaja2={lomake.pelaaja2}/>
+                pelaaja2={lomake.pelaaja2} />
         </div>
     )
     /* jshint ignore: end */
@@ -175,6 +174,25 @@ function PiiloutuvaLomake(props) {
 }
 
 
+// ----------- pelin kokonaisuus ----------
+
+function Pelikokonaisuus(props) {
+    /* jshint ignore:start*/
+    return (
+        <div>
+            <Pelilauta
+                koko={props.koko}/>
+            <Pelinappulat
+                pelaaja1={props.pelaaja1}
+                pelaaja2={props.pelaaja2}/>
+        </div>
+    )
+    /* jshint ignore:end*/
+
+}
+
+
+
 // ----------- pelilauta -----------
 
 function Pelilauta(props) {
@@ -197,6 +215,7 @@ function Pelilauta(props) {
             <Rivi
                 key={i}
                 rivi={i}
+                koko={props.koko}
                 sisallot={ruudut[i]} />
         )
     }
@@ -213,7 +232,7 @@ function Rivi(props) {
     
     /* jshint ignore: start */
     let osia = [];
-    for (let i = 0; i < props.sisallot.length; i++) {
+    for (let i = 0; i < props.koko; i++) {
         osia.push(
             <Osa
                 key={props.rivi + i}
