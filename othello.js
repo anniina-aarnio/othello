@@ -134,6 +134,7 @@ function Lomake(props) {
                         type="range"
                         id="kentanKoko"
                         min="4" max="16"
+                        step="2"
                         value={props.lomake.kentanKoko}
                         onChange={props.change}/>
                     <label>Valittu koko: {props.lomake.kentanKoko}x{props.lomake.kentanKoko}</label>
@@ -178,7 +179,7 @@ function Pelilauta(props) {
     /* jshint ignore: start */
     let riveja = [];
     for (let i = 0; i < props.koko; i++) {
-        riveja.push(<Rivi key={i} koko={props.koko} />)
+        riveja.push(<Rivi key={i} koko={props.koko} rivi={i} />)
     }
     
     return (
@@ -194,7 +195,7 @@ function Rivi(props) {
     /* jshint ignore: start */
     let osia = [];
     for (let i = 0; i < props.koko; i++) {
-        osia.push(<Osa key={i} />)
+        osia.push(<Osa key={props.rivi + i} />)
     }
     return (
         <div>{osia}</div>
@@ -204,7 +205,7 @@ function Rivi(props) {
 
 function Osa(props) {
     /* jshint ignore: start */
-    return (<label>[ ]</label>)
+    return (<label className="peliruutu">[ ]</label>)
     /* jshint ignore: end */
 }
 
