@@ -10,7 +10,7 @@ h1 {
 /* Pelikokonaisuus */
 #pelikokonaisuus {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     width: 100%;
     height: 100%;
 }
@@ -18,7 +18,6 @@ h1 {
 /* Pelilauta */
 #pelilauta {
     border: 1px solid white;
-    float: left;
     display: block;
     width: fit-content;
 }
@@ -37,8 +36,7 @@ h1 {
 
 #sivuosa {
     border: 1px solid white;
-    width: 25%;
-    float: right;
+    width: 10%;
 }
 
 #sivuosa > div {
