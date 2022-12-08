@@ -176,6 +176,17 @@ function PiiloutuvaLomake(props) {
 
 function Pelilauta(props) {
 
+    let tyhjaTaulukko = [];
+    for (let i = 0; i < props.koko; i++) {
+        let rivi = [];
+        for (let j = 0; j < props.koko; j++) {
+            rivi.push("");
+        }
+        tyhjaTaulukko.push(rivi);
+    }
+    
+    const [ruudut, setRuudut] = React.useState(tyhjaTaulukko);
+
     /* jshint ignore: start */
     let riveja = [];
     for (let i = 0; i < props.koko; i++) {
