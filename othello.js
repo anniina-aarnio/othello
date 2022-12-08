@@ -254,7 +254,7 @@ function Rivi(props) {
     let osia = [];
     for (let i = 0; i < props.koko; i++) {
         osia.push(
-            <Osa
+            <Ruutu
                 key={props.rivi + i}
                 sisalto={props.sisallot[i]}
             />)
@@ -265,9 +265,30 @@ function Rivi(props) {
     /* jshint ignore: end */
 }
 
-function Osa(props) {
+function Ruutu(props) {
     /* jshint ignore: start */
-    return (<label className="peliruutu">[{props.sisalto}]</label>)
+    let musta = <Musta />;
+    let valkoinen = <Valkoinen />;
+
+    if (props.sisalto == " ") {
+        return (<label className="peliruutu">[ ]</label>)
+    } else if (props.sisalto == "X") {
+        return (<label className="peliruutu">[{musta}]</label>)
+    } else {
+        return (<label className="peliruutu">[{valkoinen}]</label>)
+    }
+    /* jshint ignore: end */
+}
+
+function Valkoinen(props) {
+    /* jshint ignore: start */
+    return <label className="valkoinen">O</label>
+    /* jshint ignore: end */
+}
+
+function Musta(props) {
+    /* jshint ignore: start */
+    return <label className="musta">X</label>
     /* jshint ignore: end */
 }
 
