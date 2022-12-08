@@ -206,10 +206,22 @@ function Pelikokonaisuus(props) {
 function Pelilauta(props) {
 
     let tyhjaTaulukko = [];
+    let keski = props.koko / 2;
+    
     for (let i = 0; i < props.koko; i++) {
         let rivi = [];
         for (let j = 0; j < props.koko; j++) {
-            rivi.push(" ");
+            if (i == keski -1 && j == keski - 1) {
+                rivi.push("X");
+            } else if (i == keski -1 && j == keski) {
+                rivi.push("O");
+            } else if (i == keski && j == keski - 1) {
+                rivi.push("O");
+            } else if (i == keski && j == keski) {
+                rivi.push("X");
+            } else {
+                rivi.push(" ");
+            }
         }
         tyhjaTaulukko.push(rivi);
     }
