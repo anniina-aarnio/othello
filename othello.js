@@ -180,26 +180,26 @@ function PiiloutuvaLomake(props) {
 
 
 function Pelikokonaisuus(props) {
+
+
     let pisteet = {pelaaja1: 2, pelaaja2: 2};
+
+    if (!props.pelitila) {
     /* jshint ignore:start*/
-    if (props.pelitila) {
-        return (
-            <div id="pelikokonaisuus">
-                <Pelilauta
-                    koko={props.koko}/>
-                <PelilaudanSivu
-                    pelaaja1={props.pelaaja1}
-                    pelaaja2={props.pelaaja2}
-                    pisteet={pisteet}/>
-            </div>
-        )
-    }
-    else {
-        return (
-            <div></div>
-        )
+        return <div></div>
     }
 
+
+    return (
+        <div id="pelikokonaisuus">
+            <Pelilauta
+                koko={props.koko}/>
+            <PelilaudanSivu
+                pelaaja1={props.pelaaja1}
+                pelaaja2={props.pelaaja2}
+                pisteet={pisteet}/>
+        </div>
+    )
     /* jshint ignore:end*/
 }
 
