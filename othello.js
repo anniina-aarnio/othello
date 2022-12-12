@@ -239,9 +239,11 @@ function Rivi(props) {
     /* jshint ignore: start */
     let osia = [];
     for (let i = 0; i < props.koko; i++) {
+        let xy = "x" + i + "-y" + props.rivi;
         osia.push(
             <Ruutu
-                key={props.rivi + i}
+                id={xy}
+                key={props.rivi * Number(props.koko) + i}
                 sisalto={props.sisallot[i]}
             />)
     }
@@ -251,19 +253,31 @@ function Rivi(props) {
     /* jshint ignore: end */
 }
 
+
+/**
+ * Luo ruudun [*] jonka sisällä * tilalla on joko:
+ * Tyhja, Musta tai Valkoinen
+ * @param {Object} props 
+ * @returns 
+ */
 function Ruutu(props) {
 
+    // mitä tekee kun raahataan X tai O sivusta päälle
     let dragOver = function (event) {
         event.preventDefault();
+        // jos raahattava on mustan nappula
         if (event.dataTransfer.types.includes("musta")) {
             event.dataTransfer.dropEffect = "move";
+        // jos raahattava on valkoisen nappula
         } else if (event.dataTransfer.types.includes("valkoinen")) {
             event.dataTransfer.dropEffect = "move";
+        // jos raahattava on mitä tahansa muuta
         } else {
             event.dataTransfer.dropEffect = "none";
         }
     };
 
+    // mitä tekee kun tiputtaa X tai O sivusta päälle
     let drop = function (event) {
         event.preventDefault();
         let dataMusta = event.dataTransfer.getData("musta");
@@ -283,12 +297,12 @@ function Ruutu(props) {
     let tyhja = <Tyhja teeDragOver={dragOver} teeDrop={drop}/>;
 
     if (props.sisalto == " ") {
-        return (<label
+        return (<label id={props.id}
                 className="peliruutu">[{tyhja}]</label>)
     } else if (props.sisalto == "X") {
-        return (<label className="peliruutu">[{musta}]</label>)
+        return (<label id={props.id} className="peliruutu">[{musta}]</label>)
     } else {
-        return (<label className="peliruutu">[{valkoinen}]</label>)
+        return (<label id={props.id} className="peliruutu">[{valkoinen}]</label>)
     }
     /* jshint ignore: end */
 }
