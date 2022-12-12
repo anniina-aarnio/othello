@@ -337,7 +337,7 @@ function PelaajanTiedot(props) {
 function Pelimerkki(props) {
     /* jshint ignore:start */
     return (
-        <label className={props.color}>{props.merkki}</label>
+        <label draggable="true" className={props.color}>{props.merkki}</label>
     )
     /* jshint ignore:end */
 }
