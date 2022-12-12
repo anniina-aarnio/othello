@@ -266,12 +266,23 @@ function Rivi(props) {
 }
 
 function Ruutu(props) {
+
+    let dragOver = function (event) {
+        event.preventDefault();
+        if (event.dataTransfer.types.includes("musta")) {
+            event.dataTransfer.dropEffect = "move";
+        } else if (event.dataTransfer.types.includes("valkoinen")) {
+            event.dataTransfer.dropEffect = "move";
+        } else {
+            event.dataTransfer.dropEffect = "none";
+        }
+    };
     /* jshint ignore: start */
     let musta = <Musta />;
     let valkoinen = <Valkoinen />;
 
     if (props.sisalto == " ") {
-        return (<label className="peliruutu">[ ]</label>)
+        return (<label className="peliruutu" onDragOver={dragOver}>[ ]</label>)
     } else if (props.sisalto == "X") {
         return (<label className="peliruutu">[{musta}]</label>)
     } else {
@@ -336,6 +347,7 @@ function PelaajanTiedot(props) {
 
 function Pelimerkki(props) {
     let dragStart = function(event) {
+        event.dataTransfer.setData(event.target.getAttribute("name"), event.target.getAttribute("name"));
         console.log("raahauksen alku", event.target.getAttribute("name"));
     };
 
