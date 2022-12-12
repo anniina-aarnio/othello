@@ -190,14 +190,27 @@ function Pelikokonaisuus(props) {
 
     const [ruudut, setRuudut] = React.useState(alkutilanne);
 
+    let handleChange = function(koordinaatit, merkki) {
+        let uudetRuudut = [];
+        for (let i = 0; i < ruudut.length; i++) {
+            let rivi = [...ruudut[i]];
+            uudetRuudut.push(rivi);
+        }
+        uudetRuudut[koordinaatit.y][koordinaatit.x] = merkki;
+        setRuudut(uudetRuudut);
+    };
+
+    // TODO laske pisteet
     let pisteet = {pelaaja1: 2, pelaaja2: 2};
+
 
     /* jshint ignore:start*/
     return (
         <div id="pelikokonaisuus">
             <Pelilauta
                 koko={props.koko}
-                ruudut={ruudut}/>
+                ruudut={ruudut}
+                muutaSisaltoa={handleChange}/>
             <PelilaudanSivu
                 pelaaja1={props.pelaaja1}
                 pelaaja2={props.pelaaja2}
@@ -222,7 +235,8 @@ function Pelilauta(props) {
                 key={i}
                 rivi={i}
                 koko={props.koko}
-                sisallot={props.ruudut[i]} />
+                sisallot={props.ruudut[i]}
+                muutaSisaltoa={props.muutaSisaltoa}/>
         )
     }
     
@@ -253,6 +267,7 @@ function Rivi(props) {
                 id={xy}
                 key={props.rivi * Number(props.koko) + i}
                 sisalto={props.sisallot[i]}
+                muutaSisaltoa={props.muutaSisaltoa}
             />)
     }
     return (
@@ -290,9 +305,12 @@ function Ruutu(props) {
         event.preventDefault();
         let dataMusta = event.dataTransfer.getData("musta");
         let dataValkoinen = event.dataTransfer.getData("valkoinen");
+        let ruutu = ruudunKoordinaatit(event.target.parentElement.id);
         if (dataMusta) {
-            console.log("drop musta: ", dataMusta, event.target.parentElement);
+            props.muutaSisaltoa(ruutu, "X");
+            console.log("drop musta: ", dataMusta, ruutu);
         } else if (dataValkoinen) {
+            props.muutaSisaltoa(ruutu, "O");
             console.log("drop valkoinen:", dataValkoinen);
         } else {
             console.log("drop jokin muu tiputus");
@@ -447,4 +465,20 @@ function luoAlkutilanne(koko) {
         tyhjaTaulukko.push(rivi);
     }
     return tyhjaTaulukko;
+}
+
+/**
+ * Palauttaa annetun xy-merkkijonon perusteella koordinaatit
+ * x*-y** -> palastellaan ensin x* ja y**, josta poimitaan:
+ * koordinaatit.x = *
+ * koordinaatit.y = **
+ * @param {String} xy muotoa "x*-y**" jossa * ja ** on mikä tahansa numero 0-16 
+ * @returns {Object} sisällöltään: x: *, y: **
+ */
+function ruudunKoordinaatit(xy) {
+    let koordinaatit = {x: 0, y:0};
+    let osat = xy.split("-");
+    koordinaatit.x = Number(osat[0].substring(1, osat[0].length));
+    koordinaatit.y = Number(osat[1].substring(1, osat[1].length));
+    return koordinaatit;
 }
