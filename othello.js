@@ -234,6 +234,14 @@ function Pelilauta(props) {
     /* jshint ignore: end */
 }
 
+/**
+ * Luodaan rivit, jotka tekevät ruutuja riville yhtä monta kuin rivejäkin on
+ * Rivi luo ruuduille id:t, jotka ovat muotoa "x*-y*" ja * tarkoittaa lukua
+ * joka on välillä 0-props.koko
+ * (eli esim. 0, 1, 2 tai 3, kun on kyseessä 4 koko) 
+ * @param {Object} props 
+ * @returns 
+ */
 function Rivi(props) {
     
     /* jshint ignore: start */
@@ -283,7 +291,7 @@ function Ruutu(props) {
         let dataMusta = event.dataTransfer.getData("musta");
         let dataValkoinen = event.dataTransfer.getData("valkoinen");
         if (dataMusta) {
-            console.log("drop musta: ", dataMusta, event.target);
+            console.log("drop musta: ", dataMusta, event.target.parentElement);
         } else if (dataValkoinen) {
             console.log("drop valkoinen:", dataValkoinen);
         } else {
