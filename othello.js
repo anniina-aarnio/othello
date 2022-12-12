@@ -335,9 +335,25 @@ function PelaajanTiedot(props) {
 }
 
 function Pelimerkki(props) {
+    let dragStart = function(event) {
+        console.log("raahauksen alku", event.target.getAttribute("name"));
+    };
+
+    let dragEnd = function(event) {
+        console.log("raahauksen loppu", event.target.getAttribute("name"));
+    };
+
+
     /* jshint ignore:start */
     return (
-        <label draggable="true" className={props.color}>{props.merkki}</label>
+        <label
+            name={props.color}
+            className={props.color}
+            draggable="true"
+            onDragStart={dragStart}
+            onDragEnd={dragEnd}>
+                {props.merkki}
+        </label>
     )
     /* jshint ignore:end */
 }
