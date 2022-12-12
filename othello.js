@@ -181,35 +181,16 @@ function PiiloutuvaLomake(props) {
 
 function Pelikokonaisuus(props) {
     /* jshint ignore:start*/
+    // jos lomake näkyvissä eli ei vielä pelitila
     if (!props.pelitila) {
-
         return <div></div>
     }
     /* jshint ignore:end*/
 
     // alustetaan pelilautataulukko
-    let tyhjaTaulukko = [];
-    let keski = props.koko / 2;
-    
-    for (let i = 0; i < props.koko; i++) {
-        let rivi = [];
-        for (let j = 0; j < props.koko; j++) {
-            if (i == keski -1 && j == keski - 1) {
-                rivi.push("X");
-            } else if (i == keski -1 && j == keski) {
-                rivi.push("O");
-            } else if (i == keski && j == keski - 1) {
-                rivi.push("O");
-            } else if (i == keski && j == keski) {
-                rivi.push("X");
-            } else {
-                rivi.push(" ");
-            }
-        }
-        tyhjaTaulukko.push(rivi);
-    }
+    let alkutilanne = luoAlkutilanne(props.koko);
 
-    const [ruudut, setRuudut] = React.useState(tyhjaTaulukko);
+    const [ruudut, setRuudut] = React.useState(alkutilanne);
 
     let pisteet = {pelaaja1: 2, pelaaja2: 2};
 
@@ -404,3 +385,30 @@ root.render(
     </React.StrictMode>
     /* jshint ignore:end */
 );
+
+
+// --------- apufunktiot ----------
+
+function luoAlkutilanne(koko) {
+    let tyhjaTaulukko = [];
+    let keski = koko / 2;
+    
+    for (let i = 0; i < koko; i++) {
+        let rivi = [];
+        for (let j = 0; j < koko; j++) {
+            if (i == keski -1 && j == keski - 1) {
+                rivi.push("X");
+            } else if (i == keski -1 && j == keski) {
+                rivi.push("O");
+            } else if (i == keski && j == keski - 1) {
+                rivi.push("O");
+            } else if (i == keski && j == keski) {
+                rivi.push("X");
+            } else {
+                rivi.push(" ");
+            }
+        }
+        tyhjaTaulukko.push(rivi);
+    }
+    return tyhjaTaulukko;
+}
