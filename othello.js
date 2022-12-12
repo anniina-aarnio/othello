@@ -277,12 +277,29 @@ function Ruutu(props) {
             event.dataTransfer.dropEffect = "none";
         }
     };
+
+    let drop = function (event) {
+        event.preventDefault();
+        let dataMusta = event.dataTransfer.getData("musta");
+        let dataValkoinen = event.dataTransfer.getData("valkoinen");
+        if (dataMusta) {
+            console.log("drop musta: ", dataMusta, event.target);
+        } else if (dataValkoinen) {
+            console.log("drop valkoinen:", dataValkoinen);
+        } else {
+            console.log("drop jokin muu tiputus");
+        }
+    };
+
     /* jshint ignore: start */
     let musta = <Musta />;
     let valkoinen = <Valkoinen />;
 
     if (props.sisalto == " ") {
-        return (<label className="peliruutu" onDragOver={dragOver}>[ ]</label>)
+        return (<label
+                className="peliruutu"
+                onDragOver={dragOver}
+                onDrop={drop}>[ ]</label>)
     } else if (props.sisalto == "X") {
         return (<label className="peliruutu">[{musta}]</label>)
     } else {
