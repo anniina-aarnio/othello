@@ -177,6 +177,8 @@ function PiiloutuvaLomake(props) {
 
 // ----------- pelin kokonaisuus ----------
 
+let pisteet = {pelaaja1: 2, pelaaja2: 2};
+
 function Pelikokonaisuus(props) {
     /* jshint ignore:start*/
     if (props.pelitila) {
@@ -186,7 +188,8 @@ function Pelikokonaisuus(props) {
                     koko={props.koko}/>
                 <PelilaudanSivu
                     pelaaja1={props.pelaaja1}
-                    pelaaja2={props.pelaaja2}/>
+                    pelaaja2={props.pelaaja2}
+                    pisteet={pisteet}/>
             </div>
         )
     }
@@ -328,12 +331,12 @@ function PelilaudanSivu(props) {
         <div id="sivuosa">
             <PelaajanTiedot
                 pelaaja={props.pelaaja1}
-                pisteet="0"
+                pisteet={props.pisteet.pelaaja1}
                 color="musta"
                 merkki="X"/>
             <PelaajanTiedot
                 pelaaja={props.pelaaja2}
-                pisteet="0"
+                pisteet={props.pisteet.pelaaja2}
                 color="valkoinen"
                 merkki="O"/>
 
