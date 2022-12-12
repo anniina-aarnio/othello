@@ -180,35 +180,14 @@ function PiiloutuvaLomake(props) {
 
 
 function Pelikokonaisuus(props) {
-
-
-    let pisteet = {pelaaja1: 2, pelaaja2: 2};
-
-    if (!props.pelitila) {
     /* jshint ignore:start*/
+    if (!props.pelitila) {
+
         return <div></div>
     }
-
-
-    return (
-        <div id="pelikokonaisuus">
-            <Pelilauta
-                koko={props.koko}/>
-            <PelilaudanSivu
-                pelaaja1={props.pelaaja1}
-                pelaaja2={props.pelaaja2}
-                pisteet={pisteet}/>
-        </div>
-    )
     /* jshint ignore:end*/
-}
 
-
-
-// ----------- pelilauta -----------
-
-function Pelilauta(props) {
-
+    // alustetaan pelilautataulukko
     let tyhjaTaulukko = [];
     let keski = props.koko / 2;
     
@@ -232,6 +211,30 @@ function Pelilauta(props) {
 
     const [ruudut, setRuudut] = React.useState(tyhjaTaulukko);
 
+    let pisteet = {pelaaja1: 2, pelaaja2: 2};
+
+    /* jshint ignore:start*/
+    return (
+        <div id="pelikokonaisuus">
+            <Pelilauta
+                koko={props.koko}
+                ruudut={ruudut}/>
+            <PelilaudanSivu
+                pelaaja1={props.pelaaja1}
+                pelaaja2={props.pelaaja2}
+                pisteet={pisteet}/>
+        </div>
+    )
+    /* jshint ignore:end*/
+}
+
+
+
+// ----------- pelilauta -----------
+
+function Pelilauta(props) {
+
+
     /* jshint ignore: start */
     let riveja = [];
     for (let i = 0; i < props.koko; i++) {
@@ -240,7 +243,7 @@ function Pelilauta(props) {
                 key={i}
                 rivi={i}
                 koko={props.koko}
-                sisallot={ruudut[i]} />
+                sisallot={props.ruudut[i]} />
         )
     }
     
