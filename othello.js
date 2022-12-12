@@ -6,10 +6,9 @@ function App(props) {
     const [lomake, setLomake] = React.useState( {
         "pelaaja1": "",
         "pelaaja2": "",
-        "kentanKoko": 4
+        "kentanKoko": 4,
+        "nakyvissa": true
     });
-
-    const [pelitila, setPelitila] = React.useState(false);
 
     /**
      * Käsittelee inputin muutostapahtumat lomakkeessa
@@ -68,10 +67,9 @@ function App(props) {
         let uusilomake = {...lomake};
         uusilomake.pelaaja1 = lomake.pelaaja1.trim();
         uusilomake.pelaaja2 = lomake.pelaaja2.trim();
+
+        uusilomake.nakyvissa = false;
         setLomake(uusilomake);
-        
-        // muutetaan pelitila
-        setPelitila(true);
     };
 
     /* jshint ignore: start */
@@ -79,13 +77,13 @@ function App(props) {
         <div>
             <h1>Othello</h1>
             <PiiloutuvaLomake
-                pelitila={pelitila}
+                lomakeNakyvissa={lomake.nakyvissa}
                 lomake={lomake}
                 change={handleChangeLomake}
                 tallenna={handleSubmitLomake}
             />
             <Pelikokonaisuus
-                pelitila={pelitila}
+                lomakeNakyvissa={lomake.nakyvissa}
                 koko={lomake.kentanKoko}
                 pelaaja1={lomake.pelaaja1}
                 pelaaja2={lomake.pelaaja2} />
@@ -159,7 +157,7 @@ function Lomake(props) {
 function PiiloutuvaLomake(props) {
 
     /* jshint ignore: start */
-    if (!props.pelitila) {
+    if (props.lomakeNakyvissa) {
         return (
             <Lomake
             lomake={props.lomake}
@@ -182,7 +180,7 @@ function PiiloutuvaLomake(props) {
 function Pelikokonaisuus(props) {
     /* jshint ignore:start*/
     // jos lomake näkyvissä eli ei vielä pelitila
-    if (!props.pelitila) {
+    if (props.lomakeNakyvissa) {
         return <div></div>
     }
     /* jshint ignore:end*/
@@ -282,13 +280,11 @@ function Ruutu(props) {
     /* jshint ignore: start */
     let musta = <Musta />;
     let valkoinen = <Valkoinen />;
-    let tyhja = <Tyhja />;
+    let tyhja = <Tyhja teeDragOver={dragOver} teeDrop={drop}/>;
 
     if (props.sisalto == " ") {
         return (<label
-                className="peliruutu"
-                onDragOver={dragOver}
-                onDrop={drop}>[{tyhja}]</label>)
+                className="peliruutu">[{tyhja}]</label>)
     } else if (props.sisalto == "X") {
         return (<label className="peliruutu">[{musta}]</label>)
     } else {
@@ -299,7 +295,7 @@ function Ruutu(props) {
 
 function Tyhja(props) {
     /* jshint ignore: start */
-    return <label name="tyhja"> </label>
+    return <label onDragOver={props.teeDragOver} onDrop={props.teeDrop} name="tyhja"> </label>
     /* jshint ignore: end */
 }
 
