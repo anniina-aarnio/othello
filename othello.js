@@ -387,8 +387,14 @@ root.render(
 );
 
 
-// --------- apufunktiot ----------
+// ----------- apufunktiot -----------
 
+/**
+ * Ottaa parametrina taulukon sivun pituuden ja luo sen perusteella taulukon,
+ * jossa on alkuasetelma pelinappuloita valmiina
+ * @param {Number} koko 
+ * @returns taulukko, jossa ruudut jokaiselle pelilaudan ruudulle alkutilanteena
+ */
 function luoAlkutilanne(koko) {
     let tyhjaTaulukko = [];
     let keski = koko / 2;
