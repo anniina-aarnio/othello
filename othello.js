@@ -201,7 +201,16 @@ function Pelikokonaisuus(props) {
     };
 
     // TODO laske pisteet
-    let pisteet = {pelaaja1: 2, pelaaja2: 2};
+    let pisteet = {pelaaja1: 0, pelaaja2: 0};
+    for (let i = 0; i < props.koko; i++) {
+        for (let j = 0; j < props.koko; j++) {
+            if (ruudut[i][j] == "X") {
+                pisteet.pelaaja1 += 1;
+            } else if (ruudut[i][j] == "O") {
+                pisteet.pelaaja2 += 1;
+            }
+        }
+    }
 
 
     /* jshint ignore:start*/
