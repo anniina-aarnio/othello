@@ -177,9 +177,10 @@ function PiiloutuvaLomake(props) {
 
 // ----------- pelin kokonaisuus ----------
 
-let pisteet = {pelaaja1: 2, pelaaja2: 2};
+
 
 function Pelikokonaisuus(props) {
+    let pisteet = {pelaaja1: 2, pelaaja2: 2};
     /* jshint ignore:start*/
     if (props.pelitila) {
         return (
