@@ -282,17 +282,24 @@ function Ruutu(props) {
     /* jshint ignore: start */
     let musta = <Musta />;
     let valkoinen = <Valkoinen />;
+    let tyhja = <Tyhja />;
 
     if (props.sisalto == " ") {
         return (<label
                 className="peliruutu"
                 onDragOver={dragOver}
-                onDrop={drop}>[ ]</label>)
+                onDrop={drop}>[{tyhja}]</label>)
     } else if (props.sisalto == "X") {
         return (<label className="peliruutu">[{musta}]</label>)
     } else {
         return (<label className="peliruutu">[{valkoinen}]</label>)
     }
+    /* jshint ignore: end */
+}
+
+function Tyhja(props) {
+    /* jshint ignore: start */
+    return <label name="tyhja"> </label>
     /* jshint ignore: end */
 }
 
@@ -392,6 +399,11 @@ root.render(
 /**
  * Ottaa parametrina taulukon sivun pituuden ja luo sen perusteella taulukon,
  * jossa on alkuasetelma pelinappuloita valmiina
+ * esim. koko = 4: (_ tarkoittaa tyhjää ruutua)
+ * _ _ _ _
+ * _ x o _
+ * _ o x _
+ * _ _ _ _
  * @param {Number} koko 
  * @returns taulukko, jossa ruudut jokaiselle pelilaudan ruudulle alkutilanteena
  */
