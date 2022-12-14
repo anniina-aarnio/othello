@@ -202,11 +202,8 @@ function Pelikokonaisuus(props) {
     const [ruudut, setRuudut] = React.useState(alkutilanne);
     const [vuoro, setVuoro] = React.useState("musta");
 
-
-
-
     /**
-     * 
+     * Huolehtii muutoksesta pelilaudalla, kun on onnistuneesti laitettu nappula
      * @param {Array} koordinaatit (mihin ruutuun nappula on vedetty)
      * @param {String} merkki "X" tai "O" (musta == X, valkoinen == O) 
      */
@@ -226,7 +223,24 @@ function Pelikokonaisuus(props) {
                 setVuoro("musta");
             }
         }
+        if (tyhjiaNolla(uudetRuudut)) {
+            loppu();
+        }
     };
+
+    function tyhjiaNolla(taulukko) {
+        for (let i = 0; i < props.koko; i++) {
+            for (let j = 0; j < props.koko; j++) {
+                if (taulukko[i][j] == " " || taulukko[i][j] == "r" || taulukko[i][j] == "x" || taulukko[i][j] == "o") {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    function loppu() {
+        console.log("loppu!");
+    }
 
     // lasketaan tämän hetken pisteet pelilaudalla
     let pisteet = {pelaaja1: 0, pelaaja2: 0};
@@ -613,11 +627,16 @@ function kopioiTaulukko(taulukko) {
 
 
 /**
- * 
+ * Käy läpi kaikki ruudut:
+ * (reunapaikat ovat sellaisia, joissa vieressä vähintään 1 nappula)
+ * - kirjaa uudet reunapaikat viimeksi laitetun nappulan ympärille (tyhjiin)
+ * - vaihtaa uuden nappulan ja vanhojen omien nappuloiden väliin jääneet omiksi
+ * - muuttaa reunapaikat "mahdollisiksi ruuduiksi", jos niitä on
+ * - palauttaa tiedon siitä, oliko mahdollisia ruutuja
  * @param {Array} taulukko ruutujen tilanteesta
- * @param {Object} koordinaatit .x: Number, .y: Number 
- * @param {String} vuoro "musta" tai "valkoinen" 
- * @returns 
+ * @param {Object} koordinaatit johon viimeisin siirto tehty
+ * @param {String} vuoro "musta" tai "valkoinen" joka viimeksi laittanut
+ * @returns true, jos seuraavaksi vuorolla olevalla on paikkoja, joihin laittaa
  */
 function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
     kirjaaUudetReunapaikat(taulukko, koordinaatit);
