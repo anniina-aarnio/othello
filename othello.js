@@ -176,7 +176,11 @@ function PiiloutuvaLomake(props) {
 // ----------- pelin kokonaisuus ----------
 
 
-
+/**
+ * Ylläpitää pelin kaikkea toiminnallisuutta
+ * @param {Object} props 
+ * @returns 
+ */
 function Pelikokonaisuus(props) {
     /* jshint ignore:start*/
     // jos lomake näkyvissä eli ei vielä pelitila
@@ -189,6 +193,7 @@ function Pelikokonaisuus(props) {
     let alkutilanne = luoAlkutilanne(props.koko);
 
     const [ruudut, setRuudut] = React.useState(alkutilanne);
+    const [vuoro, setVuoro] = React.useState("musta");
 
     let handleChange = function(koordinaatit, merkki) {
         let uudetRuudut = [];
@@ -198,9 +203,14 @@ function Pelikokonaisuus(props) {
         }
         uudetRuudut[koordinaatit.y][koordinaatit.x] = merkki;
         setRuudut(uudetRuudut);
+
+        if (vuoro == "musta") {
+            setVuoro("valkoinen");
+        } else {
+            setVuoro("musta");
+        }
     };
 
-    // TODO laske pisteet
     let pisteet = {pelaaja1: 0, pelaaja2: 0};
     for (let i = 0; i < props.koko; i++) {
         for (let j = 0; j < props.koko; j++) {
@@ -223,7 +233,8 @@ function Pelikokonaisuus(props) {
             <PelilaudanSivu
                 pelaaja1={props.pelaaja1}
                 pelaaja2={props.pelaaja2}
-                pisteet={pisteet}/>
+                pisteet={pisteet}
+                vuoro={vuoro}/>
         </div>
     )
     /* jshint ignore:end*/
@@ -370,12 +381,14 @@ function PelilaudanSivu(props) {
                 pelaaja={props.pelaaja1}
                 pisteet={props.pisteet.pelaaja1}
                 color="musta"
-                merkki="X"/>
+                merkki="X"
+                vuoro={props.vuoro}/>
             <PelaajanTiedot
                 pelaaja={props.pelaaja2}
                 pisteet={props.pisteet.pelaaja2}
                 color="valkoinen"
-                merkki="O"/>
+                merkki="O"
+                vuoro={props.vuoro}/>
 
 
         </div>
@@ -394,7 +407,7 @@ function PelaajanTiedot(props) {
                 <label>Pisteet:{props.pisteet}</label>
             </div>
             <div>
-                <Pelimerkki color={props.color} merkki={props.merkki}/>
+                <Pelimerkki vuoro={props.vuoro} color={props.color} merkki={props.merkki}/>
             </div>
         </div>
 
@@ -414,16 +427,27 @@ function Pelimerkki(props) {
 
 
     /* jshint ignore:start */
-    return (
-        <label
-            name={props.color}
-            className={props.color}
-            draggable="true"
-            onDragStart={dragStart}
-            onDragEnd={dragEnd}>
-                {props.merkki}
-        </label>
-    )
+    if (props.vuoro == props.color) {
+
+        return (
+            <label
+                name={props.color}
+                className={props.color}
+                draggable="true"
+                onDragStart={dragStart}
+                onDragEnd={dragEnd}>
+                    {props.merkki}
+            </label>
+        )        
+    } else {
+        return (
+            <label
+                name={props.color}
+                className={props.color}>
+                    {props.merkki}
+            </label>
+        )   
+    }
     /* jshint ignore:end */
 }
 
