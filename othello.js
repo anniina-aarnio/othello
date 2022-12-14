@@ -213,14 +213,18 @@ function Pelikokonaisuus(props) {
     let handleChange = function(koordinaatit, merkki) {
         let uudetRuudut = kopioiTaulukko(ruudut);
         uudetRuudut[koordinaatit.y][koordinaatit.x] = merkki;
-        paivitaRuutujenTilanne(uudetRuudut, koordinaatit, vuoro);
+        let mahdollisiaPaikkoja = paivitaRuutujenTilanne(uudetRuudut, koordinaatit, vuoro);
 
         setRuudut(uudetRuudut);
 
-        if (vuoro == "musta") {
-            setVuoro("valkoinen");
-        } else {
-            setVuoro("musta");
+        // jos mahdollisia paikkoja, joihin voi laittaa nappulan löytyy,
+        // vuoro vaihtuu, jos ei, vuoro pysyy samana
+        if (mahdollisiaPaikkoja) {
+            if (vuoro == "musta") {
+                setVuoro("valkoinen");
+            } else {
+                setVuoro("musta");
+            }
         }
     };
 
@@ -344,10 +348,8 @@ function Ruutu(props) {
         let ruutu = ruudunKoordinaatit(event.target.parentElement.id);
         if (dataMusta) {
             props.muutaSisaltoa(ruutu, "X");
-            console.log("drop musta: ", dataMusta, ruutu);
         } else if (dataValkoinen) {
             props.muutaSisaltoa(ruutu, "O");
-            console.log("drop valkoinen:", dataValkoinen);
         } else {
             console.log("drop jokin muu tiputus");
         }
@@ -472,11 +474,9 @@ function PelaajanTiedot(props) {
 function Pelimerkki(props) {
     let dragStart = function(event) {
         event.dataTransfer.setData(event.target.getAttribute("name"), event.target.getAttribute("name"));
-        console.log("raahauksen alku", event.target.getAttribute("name"));
     };
 
     let dragEnd = function(event) {
-        console.log("raahauksen loppu", event.target.getAttribute("name"));
     };
 
 
@@ -611,6 +611,14 @@ function kopioiTaulukko(taulukko) {
     return uudetRuudut;
 }
 
+
+/**
+ * 
+ * @param {Array} taulukko ruutujen tilanteesta
+ * @param {Object} koordinaatit .x: Number, .y: Number 
+ * @param {String} vuoro "musta" tai "valkoinen" 
+ * @returns 
+ */
 function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
     kirjaaUudetReunapaikat(taulukko, koordinaatit);
 
@@ -634,13 +642,11 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
     }
 
     let vaihdettavienSuunnat = vieressaOnVastustaja(vastustajaNyt, yNyt, xNyt);
-    console.log("laitettu", koordinaatit, "suunnat", vaihdettavienSuunnat);
 
     let vaihdettavatRuudut = [];
     // tarkistetaan vierestä löytyneiden vastustajien suunnat
     for (let b = 0; b < vaihdettavienSuunnat.length; b++) {
         // jos oma on vastustajan merkin takana, lisätään listaan
-        console.log(xNyt, yNyt);
         let onkoOmaVastustajanTakana =
             omaVastustajanTakana(vaihdettavienSuunnat[b], yNyt, xNyt, vastustajaNyt, omaNyt);
         // tulostetaan tämän hetken tilanne
@@ -648,7 +654,8 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
             lisaaVaihdettavatListaan(vaihdettavienSuunnat[b], koordinaatit.y, koordinaatit.x, omaNyt, vastustajaNyt, vaihdettavatRuudut);
         }
     }
-    console.log("nyt pitää vaihtaa:",vaihdettavatRuudut);
+
+    // vaihdetaan listassa olevat ruudut
     for (let piste of vaihdettavatRuudut) {
         taulukko[piste[0]][piste[1]] = omaNyt;
     }
@@ -675,7 +682,6 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
             // jos on reunaruutu (eli vieressä on mikä tahansa nappula) 
             if (ruutu === "r" || ruutu === "x" || ruutu === "o") {
                 let suunnat = vieressaOnVastustaja(vastustaja, i, j);
-                console.log("suunnat y", i,"x", j, suunnat);
 
                 // jos löytyi vähintään yksi suunta
                 if (suunnat.length > 0) {
@@ -696,6 +702,12 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
     for (let m of mahdolliset) {
         taulukko[m.y][m.x] = omaMahdollinen;
     }
+    console.log("mahdolliset:",mahdolliset);
+    if (mahdolliset.length == 0) {
+        return false;
+    } else {
+        return true;
+    }
 
     /**
      * Katsoo suunnan perusteella, onko vastustajan nappulan takana
@@ -714,7 +726,6 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
                 if (taulukko[i][x] == vMerkki) {
                     continue;
                 } else if (taulukko[i][x] == oMerkki) {
-                    console.log("oma vastustajan takana: suunnassa", suunta, "kohta", y, x, "oma", oMerkki, "vastustaja", vMerkki);
                     return true;
                 } else {
                     return false;
@@ -732,7 +743,6 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
                     i--;
                     continue;
                 } else if (taulukko[i][j] == oMerkki) {
-                    console.log("oma vastustajan takana: suunnassa", suunta, "kohta", y, x, "oma", oMerkki, "vastustaja", vMerkki);
                     return true;
                 } else {
                     return false;
@@ -745,7 +755,6 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
                 if (taulukko[y][j] == vMerkki) {
                     continue;
                 } else if (taulukko[y][j] == oMerkki) {
-                    console.log("oma vastustajan takana: suunnassa", suunta, "kohta", y, x, "oma", oMerkki, "vastustaja", vMerkki);
                     return true;
                 } else {
                     return false;
@@ -763,7 +772,6 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
                     i++;
                     continue;
                 } else if (taulukko[i][j] == oMerkki) {
-                    console.log("oma vastustajan takana: suunnassa", suunta, "kohta", y, x, "oma", oMerkki, "vastustaja", vMerkki);
                     return true;
                 } else {
                     return false;
@@ -776,7 +784,6 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
                 if (taulukko[i][x] == vMerkki) {
                     continue;
                 } else if (taulukko[i][x] == oMerkki) {
-                    console.log("oma vastustajan takana: suunnassa", suunta, "kohta", y, x, "oma", oMerkki, "vastustaja", vMerkki);
                     return true;
                 } else {
                     return false;
@@ -794,7 +801,6 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
                     i++;
                     continue;
                 } else if (taulukko[i][j] == oMerkki) {
-                    console.log("oma vastustajan takana: suunnassa", suunta, "kohta", y, x, "oma", oMerkki, "vastustaja", vMerkki);
                     return true;
                 } else {
                     return false;
@@ -807,7 +813,6 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
                 if (taulukko[y][j] == vMerkki) {
                     continue;
                 } else if (taulukko[y][j] == oMerkki) {
-                    console.log("oma vastustajan takana: suunnassa", suunta, "kohta", y, x, "oma", oMerkki, "vastustaja", vMerkki);
                     return true;
                 } else {
                     return false;
@@ -825,7 +830,6 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
                     i--;
                     continue;
                 } else if (taulukko[i][j] == oMerkki) {
-                    console.log("oma vastustajan takana: suunnassa", suunta, "kohta", y, x, "oma", oMerkki, "vastustaja", vMerkki);
                     return true;
                 } else {
                     return false;
