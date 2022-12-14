@@ -195,12 +195,18 @@ function Pelikokonaisuus(props) {
     const [ruudut, setRuudut] = React.useState(alkutilanne);
     const [vuoro, setVuoro] = React.useState("musta");
 
+    function laskeMahdollisetPaikat() {
+        let uudetRuudut = kopioiTaulukko(ruudut);
+    }
+
+
+    /**
+     * 
+     * @param {Array} koordinaatit (mihin ruutuun nappula on vedetty)
+     * @param {String} merkki "X" tai "O" (musta == X, valkoinen == O) 
+     */
     let handleChange = function(koordinaatit, merkki) {
-        let uudetRuudut = [];
-        for (let i = 0; i < ruudut.length; i++) {
-            let rivi = [...ruudut[i]];
-            uudetRuudut.push(rivi);
-        }
+        let uudetRuudut = kopioiTaulukko(ruudut);
         uudetRuudut[koordinaatit.y][koordinaatit.x] = merkki;
         setRuudut(uudetRuudut);
 
@@ -415,6 +421,14 @@ function PelaajanTiedot(props) {
     /* jshint ignore:end */
 }
 
+/**
+ * Huolehtii dragStartista ja dragEndistä riippuen siitä,
+ * onko vuoro sama kuin annettu väri
+ * Jos on sama, silloin draggable="true"
+ * Jos on eri, mitään drageja ei ole
+ * @param {Object} props 
+ * @returns 
+ */
 function Pelimerkki(props) {
     let dragStart = function(event) {
         event.dataTransfer.setData(event.target.getAttribute("name"), event.target.getAttribute("name"));
@@ -515,3 +529,20 @@ function ruudunKoordinaatit(xy) {
     koordinaatit.y = Number(osat[1].substring(1, osat[1].length));
     return koordinaatit;
 }
+
+
+/**
+ * Kopioi kahden syvyisen taulukon deeppinä
+ * @param {Array} taulukko muotoa [[],[],[]] 
+ */
+function kopioiTaulukko(taulukko) {
+    let uudetRuudut = [];
+    for (let i = 0; i < taulukko.length; i++) {
+        let rivi = [...taulukko[i]];
+        console.log(rivi);
+        uudetRuudut.push(rivi);
+    }
+    console.log("kopioiTaulukko", uudetRuudut);
+    return uudetRuudut;
+}
+
