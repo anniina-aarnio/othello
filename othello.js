@@ -351,7 +351,8 @@ function Pelikokonaisuus(props) {
             <Pelilauta
                 koko={props.koko}
                 ruudut={ruudut}
-                muutaSisaltoa={handleChange}/>
+                muutaSisaltoa={handleChange}
+                vuoro={vuoro}/>
             <PelilaudanSivu
                 pelaaja1={props.pelaaja1}
                 pelaaja2={props.pelaaja2}
@@ -378,6 +379,7 @@ function Pelilauta(props) {
                 rivi={i}
                 koko={props.koko}
                 sisallot={props.ruudut[i]}
+                vuoro={props.vuoro}
                 muutaSisaltoa={props.muutaSisaltoa}/>
         )
     }
@@ -408,6 +410,7 @@ function Rivi(props) {
             <Ruutu
                 id={xy}
                 key={props.rivi * Number(props.koko) + i}
+                vuoro={props.vuoro}
                 sisalto={props.sisallot[i]}
                 muutaSisaltoa={props.muutaSisaltoa}
             />)
@@ -465,16 +468,37 @@ function Ruutu(props) {
     let tyhja = <Tyhja />;
     let tyhjaDropilla = <TyhjaDropilla teeDragOver={dragOver} teeDrop={drop}/>;
 
-    if (props.sisalto == " ") {
+    // tyhjä tai reunapala jolla ei muuta tietoa
+    if (props.sisalto == " " || props.sisalto == "r") {
         return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)
-    } else if (props.sisalto == "r" || props.sisalto == "o" || props.sisalto == "x") {
-        return (<label id={props.id}
-                className="tiputus">[{tyhjaDropilla}]</label>)
-    } else if (props.sisalto == "X") {
+    // jos X
+    }else if (props.sisalto == "X") {
         return (<label id={props.id} className="peliruutu">[{musta}]</label>)
-    } else {
+    // jos O
+    } else if (props.sisalto == "O") {
         return (<label id={props.id} className="peliruutu">[{valkoinen}]</label>)
+    // jos mustan vuoro
+    } else if (props.vuoro == "musta") {
+        // jos mahdollinen paikka mustalle
+        if (props.sisalto == "x") {
+            return (<label id={props.id}
+                className="tiputus">[{tyhjaDropilla}]</label>)
+        // jos ei mahdollinen paikka mustalle
+        } else {
+            return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)
+        }
+    // jos valkoisen vuoro
+    } else if (props.vuoro == "valkoinen") {
+        // ja valkoiselle mahdollinen paikka
+        if (props.sisalto == "o") {
+            return (<label id={props.id}
+                className="tiputus">[{tyhjaDropilla}]</label>)            
+        } else {
+            return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)            
+        }
     }
+    // jos jokin ihme tilanne joka ei ylempänä selviä
+    return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)
     /* jshint ignore: end */
 }
 
