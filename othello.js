@@ -624,27 +624,33 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
     
     // VAIHDETAAN VÄLIIN JÄÄNEET VASTUSTAJAN MERKIT OMIKSI
     // oletuksena musta, mutta jos olikin valkoisen vuoro niin toisinpäin
-    // TODO nyt vaihtaa järjestyksessä vain seuraavaan omaan asti
-    // eli saattaa vaihtaa liian vähän, jos välissä on vaihtunut omaksi vrt alkup
     let omaNyt = "X";
     let vastustajaNyt = "O";
+    let yNyt = koordinaatit.y;
+    let xNyt = koordinaatit.x;
     if (vuoroOli == "valkoinen") {
         omaNyt = "O";
         vastustajaNyt = "X";
     }
 
-    let vaihdettavienSuunnat = vieressaOnVastustaja(vastustajaNyt, koordinaatit.y, koordinaatit.x);
+    let vaihdettavienSuunnat = vieressaOnVastustaja(vastustajaNyt, yNyt, xNyt);
     console.log("laitettu", koordinaatit, "suunnat", vaihdettavienSuunnat);
 
     let vaihdettavatRuudut = [];
-    // tarkistetaan viereisten suunnat
+    // tarkistetaan vierestä löytyneiden vastustajien suunnat
     for (let b = 0; b < vaihdettavienSuunnat.length; b++) {
-        // jos oma on vastustajan takana, lisätään listaan
-        if (omaVastustajanTakana(vaihdettavienSuunnat[b]), koordinaatit.y, koordinaatit.x) {
+        // jos oma on vastustajan merkin takana, lisätään listaan
+        console.log(xNyt, yNyt);
+        let onkoOmaVastustajanTakana =
+            omaVastustajanTakana(vaihdettavienSuunnat[b], yNyt, xNyt, vastustajaNyt, omaNyt);
+        // tulostetaan tämän hetken tilanne
+        console.log(
+            "^ no, onko oma vastustajantakana?", onkoOmaVastustajanTakana);
+        if (onkoOmaVastustajanTakana) {
             lisaaVaihdettavatListaan(vaihdettavienSuunnat[b], koordinaatit.y, koordinaatit.x, omaNyt, vastustajaNyt, vaihdettavatRuudut);
         }
     }
-    console.log(vaihdettavatRuudut);
+    console.log("nyt pitää vaihtaa:",vaihdettavatRuudut);
     for (let piste of vaihdettavatRuudut) {
         taulukko[piste[0]][piste[1]] = omaNyt;
     }
@@ -696,7 +702,7 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
      * @param {Number} x vastustajan pisteen, josta lähdetään katsomaan, x
      * @param {String} vMerkki vastustajan merkki
      * @param {String} oMerkki oma merkki
-     * @returns true, jos siinä suunnassa on oma merkki takana, false jos ei ole
+     * @returns {Boolean} true, jos siinä suunnassa on oma merkki takana, false jos ei ole
      */
     function omaVastustajanTakana(suunta, y, x, vMerkki, oMerkki) {
         console.log("oma vastustajan takana: suunnassa", suunta, "kohta", y, x, "oma", oMerkki, "vastustaja", vMerkki);
