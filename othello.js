@@ -221,7 +221,7 @@ function Pelikokonaisuus(props) {
                 // jos on reunaruutu (eli vieressä on mikä tahansa nappula) 
                 if (ruutu == "r" || ruutu == "x" || ruutu == "o") {
                     if (vieressaOnSopiva(vastustaja, i, j, oma)) {
-                        ruutu = omaMahdollinen;
+                        taulukko[i][j] = omaMahdollinen;
                     }
                 }
             }
@@ -236,11 +236,27 @@ function Pelikokonaisuus(props) {
          * @param {String} oMerkki oma merkki, joka tulisi olla vastustajan takana
          */
         function vieressaOnSopiva(vMerkki, y, x, oMerkki) {
-            
-            for (let i = y-1; i <= y+1; i++) {
-                for (let j = x-1; j <= x+1; j++) {
+            let alkuY = y-1;
+            if (alkuY < 0) {
+                alkuY = 0;
+            }
+            let alkuX = x-1;
+            if (alkuX < 0) {
+                alkuX = 0;
+            }
+            let loppuY = y+1;
+            if (loppuY >= taulukko.length -1) {
+                loppuY = taulukko.length -1;
+            }
+            let loppuX = x+1;
+            if (loppuX >= taulukko.length -1) {
+                loppuX = taulukko.length -1;
+            }
+            for (let i = alkuY; i <= loppuY; i++) {
+                for (let j = alkuX; j <= loppuX; j++) {
                     if (taulukko[i][j] == vMerkki) {
-                        vastustajanTakanaOn(oMerkki, i, j, vMerkki, y, x);
+                        console.log(y,x, "vieressä on vihu:", i, j);
+                        return vastustajanTakanaOn(oMerkki, i, j, vMerkki, y, x);
                     }
                 }
             }
@@ -264,6 +280,7 @@ function Pelikokonaisuus(props) {
             if (y-vastY == 0) {
                 // vasemmalle
                 if (x-vastX > 0) {
+                    console.log("vastustajan merkki olisi vasemmalla", vastY, vastX, y, x);
                     for (let j = vastX; j >= 0; j--) {
                         // jos edelleen vastustajan merkki
                         if (taulukko[y][j] == vMerkki) {
@@ -302,8 +319,24 @@ function Pelikokonaisuus(props) {
     function kirjaaUudetReunapaikat(taulukko, koordinaatit) {
         let y = koordinaatit.y;
         let x = koordinaatit.x;
-        for (let i = y - 1; i <= y+1; i++) {
-            for (let j = x-1; j <= x+1; j++ ) {
+        let alkuY = y-1;
+        if (alkuY < 0) {
+            alkuY = 0;
+        }
+        let alkuX = x-1;
+        if (alkuX < 0) {
+            alkuX = 0;
+        }
+        let loppuY = y+1;
+        if (loppuY >= taulukko.length) {
+            loppuY = taulukko.length;
+        }
+        let loppuX = x+1;
+        if (loppuX >= taulukko.length) {
+            loppuX = taulukko.length;
+        }
+        for (let i = alkuY; i <= loppuY; i++) {
+            for (let j = alkuX; j <= loppuX; j++ ) {
                 if (taulukko[i][j] == " ") {
                     taulukko[i][j] = "r";
                 }
@@ -369,7 +402,6 @@ function Pelikokonaisuus(props) {
 
 function Pelilauta(props) {
 
-
     /* jshint ignore: start */
     let riveja = [];
     for (let i = 0; i < props.koko; i++) {
@@ -424,7 +456,7 @@ function Rivi(props) {
 
 /**
  * Luo ruudun [*] jonka sisällä * tilalla on joko:
- * Tyhja, Musta tai Valkoinen
+ * TyhjaDropilla, Tyhja, Musta tai Valkoinen
  * @param {Object} props 
  * @returns 
  */
@@ -686,7 +718,6 @@ function luoAlkutilanne(koko) {
             }
         }
         tyhjaTaulukko.push(rivi);
-        console.log(rivi);
     }
     return tyhjaTaulukko;
 }
