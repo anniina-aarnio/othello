@@ -208,7 +208,7 @@ function Pelikokonaisuus(props) {
         let oma = "X";
         let vastustaja = "O";
         let omaMahdollinen = "x";
-        if (vuoro == "valkoinen") {
+        if (vuoro == "musta") {
             oma = "O";
             vastustaja = "X";
             omaMahdollinen = "o";
@@ -220,8 +220,9 @@ function Pelikokonaisuus(props) {
                 let ruutu = taulukko[i][j];
                 // jos on reunaruutu (eli vieressä on mikä tahansa nappula) 
                 if (ruutu == "r" || ruutu == "x" || ruutu == "o") {
-                    if (vieressaOnSopiva(vastustaja, i, j, oma)) {
-                        taulukko[i][j] = omaMahdollinen;
+                    let suunnat = vieressaOnVastustaja(vastustaja, i, j);
+                    if (suunnat.length > 0) {
+                        console.log("vieressä ", i, j, "olisi mahdollinen", vastustaja, "suunta", suunnat);
                     }
                 }
             }
@@ -234,8 +235,9 @@ function Pelikokonaisuus(props) {
          * @param {Number} y pisteen, jonka mahdollista sopivuutta tutkitaan, y
          * @param {Number} x pisteen, jonka mahdollista sopivuutta tutkitaan, x
          * @param {String} oMerkki oma merkki, joka tulisi olla vastustajan takana
+         * @return -1 jos ei vieressä vastustajan merkkiä
          */
-        function vieressaOnSopiva(vMerkki, y, x, oMerkki) {
+        function vieressaOnVastustaja(vMerkki, y, x) {
             let alkuY = y-1;
             if (alkuY < 0) {
                 alkuY = 0;
@@ -252,14 +254,47 @@ function Pelikokonaisuus(props) {
             if (loppuX >= taulukko.length -1) {
                 loppuX = taulukko.length -1;
             }
+
+            let suunnat = [];
             for (let i = alkuY; i <= loppuY; i++) {
                 for (let j = alkuX; j <= loppuX; j++) {
                     if (taulukko[i][j] == vMerkki) {
-                        console.log(y,x, "vieressä on vihu:", i, j);
-                        return vastustajanTakanaOn(oMerkki, i, j, vMerkki, y, x);
+                        // ylöspäin suunta on 0
+                        if (i-y < 0 && j == x) {
+                            suunnat.push(0);
+                        }
+                        // oikealle ylös suunta on 1
+                        if (i-y < 0 && j-x > 0) {
+                            suunnat.push(1);
+                        }
+                        // oikealle suunta on 2
+                        if (i == y && j-x > 0) {
+                            suunnat.push(2);
+                        }
+                        // oikealle alas suunta on 3
+                        if (i-y > 0 && j-x > 0) {
+                            suunnat.push(3);
+                        }
+                        // alas suunta on 4
+                        if (i-y > 0 && j == x) {
+                            suunnat.push(4);
+                        }
+                        // vasemmalle alas suunta on 5
+                        if (i-y > 0 && j-x < 0) {
+                            suunnat.push(5);
+                        }
+                        // vasemmalle suunta on 6
+                        if (i == y && j-x < 0) {
+                            suunnat.push(6);
+                        }
+                        // vasemmalle ylös suunta on 7
+                        if (i-y < 0 && j-x < 0) {
+                            suunnat.push(7);
+                        }
                     }
                 }
             }
+            return suunnat;
         }
 
 
@@ -281,36 +316,40 @@ function Pelikokonaisuus(props) {
                 // vasemmalle
                 if (x-vastX > 0) {
                     console.log("vastustajan merkki olisi vasemmalla", vastY, vastX, y, x);
-                    for (let j = vastX; j >= 0; j--) {
-                        // jos edelleen vastustajan merkki
-                        if (taulukko[y][j] == vMerkki) {
-                            vastustajanTakanaOn(oMerkki, y, x, vMerkki, y, j);
-                        // jos oma merkki suoraan vastustajan takana
-                        } else if (taulukko[y][j] == oMerkki) {
-                            return true;
-                        // jos jokin muu merkki
-                        } else {
-                            return false;
-                        }
-                    }
+                    vasemmalle(oMerkki, vastY, vastX, vMerkki);
                 // oikealle
                 } else {
-                    for (let j = vastX; j < taulukko.length; j++) {
-                        // jos edelleen vastustajan merkki
-                        if (taulukko[y][j] == vMerkki) {
-                            vastustajanTakanaOn(oMerkki, y, x, vMerkki, y, j);
-                        // jos oma merkki suoraan vastustajan takana
-                        } else if (taulukko[y][j] == oMerkki) {
-                            return true;
-                        //jos jokin muu merkki
-                        } else {
-                            return false;
-                        }
-                    }
+                    console.log("vastustajan merkki olisi oikealla", vastY, vastX, y, x);
+                    oikealle(oMerkki, vastY, vastX, vMerkki);
                 }
+            // pystysuunta
             }
 
             return false;
+        }
+
+        function vasemmalle(oMerkki, y, x, vMerkki) {
+            for (let j = x; j >= 0; j--) {
+                if (taulukko[y][j] == oMerkki) {
+                    return true;
+                } else if (taulukko[y][j] == vMerkki) {
+                    continue;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        function oikealle(oMerkki, y, x, vMerkki) {
+            for (let j = x; j < taulukko.length; j++) {
+                if (taulukko[y][j] == oMerkki) {
+                    return true;
+                } else if (taulukko[y][j] == vMerkki) {
+                    continue;
+                } else {
+                    return false;
+                }
+            }
         }
     }
 
