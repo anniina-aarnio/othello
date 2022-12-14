@@ -238,32 +238,48 @@ function Pelikokonaisuus(props) {
 
     function paivitaRuutujenTilanne(taulukko, koordinaatit) {
         kirjaaUudetReunapaikat(taulukko, koordinaatit);
+
         let vuoroOli = vuoro;
-        let vuoroSeuraavaksi = "musta";
+        let vuoroSeuraavaksi = "";
         if (vuoroOli == "musta") {
             vuoroSeuraavaksi = "valkoinen";
+        } else {
+            vuoroSeuraavaksi = "musta";
         }
         
         // VAIHDETAAN VÄLIIN JÄÄNEET VASTUSTAJAN MERKIT OMIKSI
         // oletuksena musta, mutta jos olikin valkoisen vuoro niin toisinpäin
-        let oma = "X";
-        let vastustaja = "O";
+        // TODO nyt vaihtaa järjestyksessä vain seuraavaan omaan asti
+        // eli saattaa vaihtaa liian vähän, jos välissä on vaihtunut omaksi vrt alkup
+        let omaNyt = "X";
+        let vastustajaNyt = "O";
         if (vuoroOli == "valkoinen") {
-            oma = "O";
-            vastustaja = "X";
+            omaNyt = "O";
+            vastustajaNyt = "X";
         }
-        let vaihdettavienSuunnat = vieressaOnVastustaja(vastustaja, koordinaatit.y, koordinaatit.x);
+
+        let vaihdettavienSuunnat = vieressaOnVastustaja(vastustajaNyt, koordinaatit.y, koordinaatit.x);
+        console.log("laitettu", koordinaatit, "suunnat", vaihdettavienSuunnat);
+
+        let vaihdettavatRuudut = [];
+        // tarkistetaan viereisten suunnat
         for (let b = 0; b < vaihdettavienSuunnat.length; b++) {
+            // jos oma on vastustajan takana, lisätään listaan
             if (omaVastustajanTakana(vaihdettavienSuunnat[b]), koordinaatit.y, koordinaatit.x) {
-                vaihdaValistaMerkitOmiksi(vaihdettavienSuunnat[b], koordinaatit.y, koordinaatit.x, oma, vastustaja);
+                lisaaVaihdettavatListaan(vaihdettavienSuunnat[b], koordinaatit.y, koordinaatit.x, omaNyt, vastustajaNyt, vaihdettavatRuudut);
             }
+        }
+        console.log(vaihdettavatRuudut);
+        for (let piste of vaihdettavatRuudut) {
+            taulukko[piste[0]][piste[1]] = omaNyt;
         }
 
         // MUUTETAAN REUNAPALOJEN TIEDOT OIKEAKSI
         // etsitään vastakkaista kuin oma vuoro on
         // oletuksena musta, mutta jos valkoisen vuoro, vaihdetaan tiedot valkoiseksi
-        oma = "X";
-        vastustaja = "O";
+
+        let oma = "X";
+        let vastustaja = "O";
         let omaMahdollinen = "x";
         if (vuoroSeuraavaksi == "valkoinen") {
             oma = "O";
@@ -277,8 +293,9 @@ function Pelikokonaisuus(props) {
                 let ruutu = taulukko[i][j];
 
                 // jos on reunaruutu (eli vieressä on mikä tahansa nappula) 
-                if (ruutu == "r" || ruutu == "x" || ruutu == "o") {
+                if (ruutu === "r" || ruutu === "x" || ruutu === "o") {
                     let suunnat = vieressaOnVastustaja(vastustaja, i, j);
+                    console.log("suunnat y", i,"x", j, suunnat);
 
                     // jos löytyi vähintään yksi suunta
                     if (suunnat.length > 0) {
@@ -287,7 +304,9 @@ function Pelikokonaisuus(props) {
                         for (let b = 0; b < suunnat.length; b++) {
                             if (omaVastustajanTakana(suunnat[b], i, j, vastustaja, oma)) {
                                 taulukko[i][j] = omaMahdollinen;
-                            } 
+                            } else {
+                                taulukko[i][j] = "r";
+                            }
                         }
                     }
                 }
@@ -493,12 +512,12 @@ function Pelikokonaisuus(props) {
             return suunnat;
         }
 
-        function vaihdaValistaMerkitOmiksi(suunta, y, x, oMerkki, vMerkki) {
+        function lisaaVaihdettavatListaan(suunta, y, x, oMerkki, vMerkki, vaihdettavienLista) {
             //ylös
             if (suunta == 0) {
                 for (let i=y-1; i > 0; i--) {
                     if (taulukko[i][x] == vMerkki) {
-                        taulukko[i][x] = oMerkki;
+                        vaihdettavienLista.push([i,x]);
                         continue;
                     }
                     if (taulukko[i][x] == oMerkki) {
@@ -514,7 +533,7 @@ function Pelikokonaisuus(props) {
                         return;
                     }
                     if (taulukko[i][j] == vMerkki) {
-                        taulukko[i][j] = oMerkki;
+                        vaihdettavienLista.push([i,j]);
                         i--;
                         continue;
                     }
@@ -527,7 +546,7 @@ function Pelikokonaisuus(props) {
             if (suunta == 2) {
                 for (let j = x+1; x < taulukko.length; j++) {
                     if (taulukko[y][j] == vMerkki) {
-                        taulukko[y][j] = oMerkki;
+                        vaihdettavienLista.push([y,j]);
                         continue;
                     }
                     if (taulukko[y][j] == oMerkki) {
@@ -543,7 +562,7 @@ function Pelikokonaisuus(props) {
                         return;
                     }
                     if (taulukko[i][j] == vMerkki) {
-                        taulukko[i][j] = oMerkki;
+                        vaihdettavienLista.push([i,j]);
                         i++;
                         continue;
                     }
@@ -556,7 +575,7 @@ function Pelikokonaisuus(props) {
             if (suunta == 4) {
                 for (let i=y+1; i < taulukko.length; i++) {
                     if (taulukko[i][x] == vMerkki) {
-                        taulukko[i][x] = oMerkki;
+                        vaihdettavienLista.push([i,x]);
                         continue;
                     }
                     if (taulukko[i][x] == oMerkki) {
@@ -572,7 +591,7 @@ function Pelikokonaisuus(props) {
                         return;
                     }
                     if (taulukko[i][j] == vMerkki) {
-                        taulukko[i][x] = oMerkki;
+                        vaihdettavienLista.push([i,j]);
                         i++;
                         continue;
                     }
@@ -585,7 +604,7 @@ function Pelikokonaisuus(props) {
             if (suunta == 6) {
                 for (let j = x-1; j >= 0; j--) {
                     if (taulukko[y][j] == vMerkki) {
-                        taulukko[y][x] = oMerkki;
+                        vaihdettavienLista.push([y,j]);
                         continue;
                     }
                     if (taulukko[y][j] == oMerkki) {    
@@ -601,7 +620,7 @@ function Pelikokonaisuus(props) {
                         return;
                     }
                     if (taulukko[i][j] == vMerkki) {
-                        taulukko[i][x] = oMerkki;
+                        vaihdettavienLista.push([i,j]);
                         i--;
                         continue;
                     }
@@ -636,9 +655,9 @@ function Pelikokonaisuus(props) {
     let pisteet = {pelaaja1: 0, pelaaja2: 0};
     for (let i = 0; i < props.koko; i++) {
         for (let j = 0; j < props.koko; j++) {
-            if (ruudut[i][j] == "X") {
+            if (ruudut[i][j] === "X") {
                 pisteet.pelaaja1 += 1;
-            } else if (ruudut[i][j] == "O") {
+            } else if (ruudut[i][j] === "O") {
                 pisteet.pelaaja2 += 1;
             }
         }
@@ -771,15 +790,15 @@ function Ruutu(props) {
     if (props.sisalto == " " || props.sisalto == "r") {
         return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)
     // jos X
-    }else if (props.sisalto == "X") {
+    }else if (props.sisalto === "X") {
         return (<label id={props.id} className="peliruutu">[{musta}]</label>)
     // jos O
-    } else if (props.sisalto == "O") {
+    } else if (props.sisalto === "O") {
         return (<label id={props.id} className="peliruutu">[{valkoinen}]</label>)
     // jos mustan vuoro
     } else if (props.vuoro == "musta") {
         // jos mahdollinen paikka mustalle
-        if (props.sisalto == "x") {
+        if (props.sisalto === "x") {
             return (<label id={props.id}
                 className="tiputus">[{tyhjaDropilla}]</label>)
         // jos ei mahdollinen paikka mustalle
@@ -789,7 +808,7 @@ function Ruutu(props) {
     // jos valkoisen vuoro
     } else if (props.vuoro == "valkoinen") {
         // ja valkoiselle mahdollinen paikka
-        if (props.sisalto == "o") {
+        if (props.sisalto === "o") {
             return (<label id={props.id}
                 className="tiputus">[{tyhjaDropilla}]</label>)            
         } else {
