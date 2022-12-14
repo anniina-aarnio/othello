@@ -225,6 +225,19 @@ function Pelikokonaisuus(props) {
         }
     }
 
+    // kirjaa uudet reunapalat juuri laitetun merkin ympärillä
+    // oleviin tyhjiin ruutuihin
+    function kirjaaUudetReunapaikat(taulukko, koordinaatit) {
+        let y = koordinaatit.y;
+        let x = koordinaatit.x;
+        for (let i = y - 1; i <= y+1; i++) {
+            for (let j = x-1; j <= x+1; j++ ) {
+                if (taulukko[i][j] == " ") {
+                    taulukko[i][j] = "r";
+                }
+            }
+        }
+    }
 
     /**
      * 
@@ -234,6 +247,7 @@ function Pelikokonaisuus(props) {
     let handleChange = function(koordinaatit, merkki) {
         let uudetRuudut = kopioiTaulukko(ruudut);
         uudetRuudut[koordinaatit.y][koordinaatit.x] = merkki;
+        kirjaaUudetReunapaikat(uudetRuudut, koordinaatit);
 
         laskeMahdollisetPaikat(uudetRuudut);
 
