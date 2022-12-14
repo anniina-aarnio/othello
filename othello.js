@@ -204,24 +204,96 @@ function Pelikokonaisuus(props) {
 
     function laskeMahdollisetPaikat(taulukko) {
         // etsitään vastakkaista kuin oma vuoro on
-
-        let vuorossa = "X";
+        // oletuksena musta, mutta jos valkoisen vuoro, vaihdetaan tiedot valkoiseksi
+        let oma = "X";
         let vastustaja = "O";
-        let reuna = "r";
+        let omaMahdollinen = "x";
         if (vuoro == "valkoinen") {
-            vuorossa = "O";
+            oma = "O";
             vastustaja = "X";
+            omaMahdollinen = "o";
         }
 
         // käydään läpi kaikki ruudut
         for (let i = 0; i < taulukko.length; i++) {
             for (let j = 0; j < taulukko[i].length; j++) {
                 let ruutu = taulukko[i][j];
-                // jos on tyhjä ruutu 
-                if (ruutu == reuna) {
-                    console.log("reunapaikka", i, j);
+                // jos on reunaruutu (eli vieressä on mikä tahansa nappula) 
+                if (ruutu == "r" || ruutu == "x" || ruutu == "o") {
+                    if (vieressaOnSopiva(vastustaja, i, j, oma)) {
+                        ruutu = omaMahdollinen;
+                    }
                 }
             }
+        }
+
+        /**
+         * katsoo onko ympärillä viereisissä vastustajan merkki
+         * ja jos on, tarkistaa onko sen takana heti tai myöhemmin oma merkki
+         * @param {String} vMerkki vastustajan merkki, jota etsitään
+         * @param {Number} y pisteen, jonka mahdollista sopivuutta tutkitaan, y
+         * @param {Number} x pisteen, jonka mahdollista sopivuutta tutkitaan, x
+         * @param {String} oMerkki oma merkki, joka tulisi olla vastustajan takana
+         */
+        function vieressaOnSopiva(vMerkki, y, x, oMerkki) {
+            
+            for (let i = y-1; i <= y+1; i++) {
+                for (let j = x-1; j <= x+1; j++) {
+                    if (taulukko[i][j] == vMerkki) {
+                        vastustajanTakanaOn(oMerkki, i, j, vMerkki, y, x);
+                    }
+                }
+            }
+        }
+
+
+        /**
+         * Etsii rekursiivisesti onko vastustajan merkin/merkkien takana oma
+         * @param {String} oMerkki oma merkki, jonka pitäisi olla 
+         * @param {Number} y 
+         * @param {Number} x
+         * @param {String} vMerkki
+         * @param {Number} vastY 
+         * @param {Number} vastX 
+         * @returns true jos löytyy, false jos ei löydy
+         */
+        function vastustajanTakanaOn(oMerkki, y, x, vMerkki, vastY, vastX) {
+            //tarkistetaan mihin suuntaan ollaan lähdössä
+
+            // vaakasuunta
+            if (y-vastY == 0) {
+                // vasemmalle
+                if (x-vastX > 0) {
+                    for (let j = vastX; j >= 0; j--) {
+                        // jos edelleen vastustajan merkki
+                        if (taulukko[y][j] == vMerkki) {
+                            vastustajanTakanaOn(oMerkki, y, x, vMerkki, y, j);
+                        // jos oma merkki suoraan vastustajan takana
+                        } else if (taulukko[y][j] == oMerkki) {
+                            return true;
+                        // jos jokin muu merkki
+                        } else {
+                            return false;
+                        }
+                    }
+                // oikealle
+                } else {
+                    for (let j = vastX; j < taulukko.length; j++) {
+                        // jos edelleen vastustajan merkki
+                        if (taulukko[y][j] == vMerkki) {
+                            vastustajanTakanaOn(oMerkki, y, x, vMerkki, y, j);
+                        // jos oma merkki suoraan vastustajan takana
+                        } else if (taulukko[y][j] == oMerkki) {
+                            return true;
+                        //jos jokin muu merkki
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
     }
 
@@ -395,7 +467,7 @@ function Ruutu(props) {
 
     if (props.sisalto == " ") {
         return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)
-    } else if (props.sisalto == "r") {
+    } else if (props.sisalto == "r" || props.sisalto == "o" || props.sisalto == "x") {
         return (<label id={props.id}
                 className="tiputus">[{tyhjaDropilla}]</label>)
     } else if (props.sisalto == "X") {
@@ -556,25 +628,25 @@ function luoAlkutilanne(koko) {
             if (i == keski -2 && j == keski-2) {
                 rivi.push("r");
             } else if (i == keski-2 && j == keski -1) {
-                rivi.push("r");
+                rivi.push("o");
             } else if (i == keski-2 && j== keski) {
-                rivi.push("r");
+                rivi.push("x");
             } else if (i == keski-2 && j== keski + 1) {
                 rivi.push("r");
             } else if (i == keski-1 && j == keski -2) {
-                rivi.push("r");
+                rivi.push("o");
             } else if (i == keski-1 && j == keski +1) {
-                rivi.push("r");
+                rivi.push("x");
             } else if (i == keski && j == keski - 2) {
-                rivi.push("r");
+                rivi.push("x");
             } else if (i == keski && j == keski + 1) {
-                rivi.push("r");
+                rivi.push("o");
             } else if (i == keski+1 && j == keski - 2) {
                 rivi.push("r");
             } else if (i == keski+1 && j == keski -1) {
-                rivi.push("r");
+                rivi.push("x");
             } else if (i== keski+1 && j == keski) {
-                rivi.push("r");
+                rivi.push("o");
             } else if (i == keski+1 && j == keski+ 1) {
                 rivi.push("r");
             } else if (i == keski -1 && j == keski - 1) {
