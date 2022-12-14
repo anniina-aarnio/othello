@@ -244,15 +244,28 @@ function Pelikokonaisuus(props) {
             vuoroSeuraavaksi = "valkoinen";
         }
         
-        //vaihdaValiinjaaneetPaikat(taulukko, koordinaatit);
+        // VAIHDETAAN VÄLIIN JÄÄNEET VASTUSTAJAN MERKIT OMIKSI
+        // oletuksena musta, mutta jos olikin valkoisen vuoro niin toisinpäin
+        let oma = "X";
+        let vastustaja = "O";
+        if (vuoroOli == "valkoinen") {
+            oma = "O";
+            vastustaja = "X";
+        }
+        let vaihdettavienSuunnat = vieressaOnVastustaja(vastustaja, koordinaatit.y, koordinaatit.x);
+        for (let b = 0; b < vaihdettavienSuunnat.length; b++) {
+            if (omaVastustajanTakana(vaihdettavienSuunnat[b]), koordinaatit.y, koordinaatit.x) {
+                vaihdaValistaMerkitOmiksi(vaihdettavienSuunnat[b], koordinaatit.y, koordinaatit.x, oma, vastustaja);
+            }
+        }
 
         // MUUTETAAN REUNAPALOJEN TIEDOT OIKEAKSI
         // etsitään vastakkaista kuin oma vuoro on
         // oletuksena musta, mutta jos valkoisen vuoro, vaihdetaan tiedot valkoiseksi
-        let oma = "X";
-        let vastustaja = "O";
+        oma = "X";
+        vastustaja = "O";
         let omaMahdollinen = "x";
-        if (vuoro == "musta") {
+        if (vuoroSeuraavaksi == "valkoinen") {
             oma = "O";
             vastustaja = "X";
             omaMahdollinen = "o";
@@ -262,11 +275,15 @@ function Pelikokonaisuus(props) {
         for (let i = 0; i < taulukko.length; i++) {
             for (let j = 0; j < taulukko[i].length; j++) {
                 let ruutu = taulukko[i][j];
+
                 // jos on reunaruutu (eli vieressä on mikä tahansa nappula) 
                 if (ruutu == "r" || ruutu == "x" || ruutu == "o") {
                     let suunnat = vieressaOnVastustaja(vastustaja, i, j);
+
+                    // jos löytyi vähintään yksi suunta
                     if (suunnat.length > 0) {
-                        console.log("vieressä ", i, j, "olisi mahdollinen", vastustaja, "suunta", suunnat);
+
+                        // käydään suunnat läpi
                         for (let b = 0; b < suunnat.length; b++) {
                             if (omaVastustajanTakana(suunnat[b], i, j, vastustaja, oma)) {
                                 taulukko[i][j] = omaMahdollinen;
@@ -404,7 +421,6 @@ function Pelikokonaisuus(props) {
                     }
                 }
             }
-            console.log("omaVastustajanTakana:",suunta, y, x);
             return false;
         }
 
@@ -476,7 +492,127 @@ function Pelikokonaisuus(props) {
             }
             return suunnat;
         }
+
+        function vaihdaValistaMerkitOmiksi(suunta, y, x, oMerkki, vMerkki) {
+            //ylös
+            if (suunta == 0) {
+                for (let i=y-1; i > 0; i--) {
+                    if (taulukko[i][x] == vMerkki) {
+                        taulukko[i][x] = oMerkki;
+                        continue;
+                    }
+                    if (taulukko[i][x] == oMerkki) {
+                        return;
+                    } 
+                }
+            }
+            // yläoikealle
+            if (suunta == 1) {
+                let i=y-1;
+                for (let j = x+1; j < taulukko.length; j++) {
+                    if (i < 0) {
+                        return;
+                    }
+                    if (taulukko[i][j] == vMerkki) {
+                        taulukko[i][j] = oMerkki;
+                        i--;
+                        continue;
+                    }
+                    if (taulukko[i][j] == oMerkki) {
+                        return;
+                    }
+                }
+            }
+            // oikealle
+            if (suunta == 2) {
+                for (let j = x+1; x < taulukko.length; j++) {
+                    if (taulukko[y][j] == vMerkki) {
+                        taulukko[y][j] = oMerkki;
+                        continue;
+                    }
+                    if (taulukko[y][j] == oMerkki) {
+                        return;
+                    }
+                }
+            }
+            // alaoikealle
+            if (suunta == 3) {
+                let i = y+1;
+                for (let j = x+1; x < taulukko.length; j++) {
+                    if (i >= taulukko.length) {
+                        return;
+                    }
+                    if (taulukko[i][j] == vMerkki) {
+                        taulukko[i][j] = oMerkki;
+                        i++;
+                        continue;
+                    }
+                    if (taulukko[i][j] == oMerkki) {
+                        return;
+                    }
+                }
+            }
+            // alas
+            if (suunta == 4) {
+                for (let i=y+1; i < taulukko.length; i++) {
+                    if (taulukko[i][x] == vMerkki) {
+                        taulukko[i][x] = oMerkki;
+                        continue;
+                    }
+                    if (taulukko[i][x] == oMerkki) {
+                        return;
+                    }
+                }
+            }
+            // alavasemmalle
+            if (suunta == 5) {
+                let i = y+1;
+                for (let j = x-1; j >= 0; j--) {
+                    if (i >= taulukko.length) {
+                        return;
+                    }
+                    if (taulukko[i][j] == vMerkki) {
+                        taulukko[i][x] = oMerkki;
+                        i++;
+                        continue;
+                    }
+                    if (taulukko[i][j] == oMerkki) {
+                        return;
+                    }
+                }
+            }
+            // vasemmalle
+            if (suunta == 6) {
+                for (let j = x-1; j >= 0; j--) {
+                    if (taulukko[y][j] == vMerkki) {
+                        taulukko[y][x] = oMerkki;
+                        continue;
+                    }
+                    if (taulukko[y][j] == oMerkki) {    
+                        return;
+                    }
+                }
+            }
+            // ylävasemmalle
+            if (suunta == 7) {
+                let i = y-1;
+                for (let j = x-1; j >= 0; j--) {
+                    if (i < 0) {
+                        return;
+                    }
+                    if (taulukko[i][j] == vMerkki) {
+                        taulukko[i][x] = oMerkki;
+                        i--;
+                        continue;
+                    }
+                    if (taulukko[i][j] == oMerkki) {
+                        return;
+                    }
+                }
+            }
+        }
     }
+
     /**
      * 
      * @param {Array} koordinaatit (mihin ruutuun nappula on vedetty)
