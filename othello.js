@@ -202,7 +202,51 @@ function Pelikokonaisuus(props) {
     const [ruudut, setRuudut] = React.useState(alkutilanne);
     const [vuoro, setVuoro] = React.useState("musta");
 
-    function laskeMahdollisetPaikat(taulukko) {
+    /**
+     * Kirjaa uudet reunapalamerkinnät juuri laitetun merkin ympärillä
+     * oleviin tyhjiin ruutuihin
+     * @param {Array} taulukko 
+     * @param {Array} koordinaatit 
+     */
+    function kirjaaUudetReunapaikat(taulukko, koordinaatit) {
+        let y = koordinaatit.y;
+        let x = koordinaatit.x;
+        let alkuY = y-1;
+        if (alkuY < 0) {
+            alkuY = 0;
+        }
+        let alkuX = x-1;
+        if (alkuX < 0) {
+            alkuX = 0;
+        }
+        let loppuY = y+1;
+        if (loppuY >= taulukko.length) {
+            loppuY = taulukko.length-1;
+        }
+        let loppuX = x+1;
+        if (loppuX >= taulukko.length) {
+            loppuX = taulukko.length-1;
+        }
+        for (let i = alkuY; i <= loppuY; i++) {
+            for (let j = alkuX; j <= loppuX; j++ ) {
+                if (taulukko[i][j] == " ") {
+                    taulukko[i][j] = "r";
+                }
+            }
+        }
+    }
+
+    function paivitaRuutujenTilanne(taulukko, koordinaatit) {
+        kirjaaUudetReunapaikat(taulukko, koordinaatit);
+        let vuoroOli = vuoro;
+        let vuoroSeuraavaksi = "musta";
+        if (vuoroOli == "musta") {
+            vuoroSeuraavaksi = "valkoinen";
+        }
+        
+        //vaihdaValiinjaaneetPaikat(taulukko, koordinaatit);
+
+        // MUUTETAAN REUNAPALOJEN TIEDOT OIKEAKSI
         // etsitään vastakkaista kuin oma vuoro on
         // oletuksena musta, mutta jos valkoisen vuoro, vaihdetaan tiedot valkoiseksi
         let oma = "X";
@@ -289,7 +333,7 @@ function Pelikokonaisuus(props) {
             if (suunta == 3) {
                 let i = y+1;
                 for (let j = x+1; x < taulukko.length; j++) {
-                    if (i > taulukko.length) {
+                    if (i >= taulukko.length) {
                         return false;
                     }
                     if (taulukko[i][j] == vMerkki) {
@@ -318,7 +362,7 @@ function Pelikokonaisuus(props) {
             if (suunta == 5) {
                 let i = y+1;
                 for (let j = x-1; j >= 0; j--) {
-                    if (i > taulukko.length) {
+                    if (i >= taulukko.length) {
                         return false;
                     }
                     if (taulukko[i][j] == vMerkki) {
@@ -432,93 +476,7 @@ function Pelikokonaisuus(props) {
             }
             return suunnat;
         }
-
-
-        /**
-         * Etsii rekursiivisesti onko vastustajan merkin/merkkien takana oma
-         * @param {String} oMerkki oma merkki, jonka pitäisi olla 
-         * @param {Number} y 
-         * @param {Number} x
-         * @param {String} vMerkki
-         * @param {Number} vastY 
-         * @param {Number} vastX 
-         * @returns true jos löytyy, false jos ei löydy
-         */
-        function vastustajanTakanaOn(oMerkki, y, x, vMerkki, vastY, vastX) {
-            //tarkistetaan mihin suuntaan ollaan lähdössä
-
-            // vaakasuunta
-            if (y-vastY == 0) {
-                // vasemmalle
-                if (x-vastX > 0) {
-                    console.log("vastustajan merkki olisi vasemmalla", vastY, vastX, y, x);
-                    vasemmalle(oMerkki, vastY, vastX, vMerkki);
-                // oikealle
-                } else {
-                    console.log("vastustajan merkki olisi oikealla", vastY, vastX, y, x);
-                    oikealle(oMerkki, vastY, vastX, vMerkki);
-                }
-            // pystysuunta
-            }
-
-            return false;
-        }
-
-        function vasemmalle(oMerkki, y, x, vMerkki) {
-            for (let j = x; j >= 0; j--) {
-                if (taulukko[y][j] == oMerkki) {
-                    return true;
-                } else if (taulukko[y][j] == vMerkki) {
-                    continue;
-                } else {
-                    return false;
-                }
-            }
-        }
-
-        function oikealle(oMerkki, y, x, vMerkki) {
-            for (let j = x; j < taulukko.length; j++) {
-                if (taulukko[y][j] == oMerkki) {
-                    return true;
-                } else if (taulukko[y][j] == vMerkki) {
-                    continue;
-                } else {
-                    return false;
-                }
-            }
-        }
     }
-
-    // kirjaa uudet reunapalat juuri laitetun merkin ympärillä
-    // oleviin tyhjiin ruutuihin
-    function kirjaaUudetReunapaikat(taulukko, koordinaatit) {
-        let y = koordinaatit.y;
-        let x = koordinaatit.x;
-        let alkuY = y-1;
-        if (alkuY < 0) {
-            alkuY = 0;
-        }
-        let alkuX = x-1;
-        if (alkuX < 0) {
-            alkuX = 0;
-        }
-        let loppuY = y+1;
-        if (loppuY >= taulukko.length) {
-            loppuY = taulukko.length;
-        }
-        let loppuX = x+1;
-        if (loppuX >= taulukko.length) {
-            loppuX = taulukko.length;
-        }
-        for (let i = alkuY; i <= loppuY; i++) {
-            for (let j = alkuX; j <= loppuX; j++ ) {
-                if (taulukko[i][j] == " ") {
-                    taulukko[i][j] = "r";
-                }
-            }
-        }
-    }
-
     /**
      * 
      * @param {Array} koordinaatit (mihin ruutuun nappula on vedetty)
@@ -527,9 +485,7 @@ function Pelikokonaisuus(props) {
     let handleChange = function(koordinaatit, merkki) {
         let uudetRuudut = kopioiTaulukko(ruudut);
         uudetRuudut[koordinaatit.y][koordinaatit.x] = merkki;
-        kirjaaUudetReunapaikat(uudetRuudut, koordinaatit);
-
-        laskeMahdollisetPaikat(uudetRuudut);
+        paivitaRuutujenTilanne(uudetRuudut, koordinaatit);
 
         setRuudut(uudetRuudut);
 
