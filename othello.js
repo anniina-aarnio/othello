@@ -376,11 +376,14 @@ function Ruutu(props) {
     /* jshint ignore: start */
     let musta = <Musta />;
     let valkoinen = <Valkoinen />;
-    let tyhja = <Tyhja teeDragOver={dragOver} teeDrop={drop}/>;
+    let tyhja = <Tyhja />;
+    let tyhjaDropilla = <TyhjaDropilla teeDragOver={dragOver} teeDrop={drop}/>;
 
     if (props.sisalto == " ") {
+        return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)
+    } else if (props.sisalto == "r") {
         return (<label id={props.id}
-                className="peliruutu">[{tyhja}]</label>)
+                className="peliruutu">[{tyhjaDropilla}]</label>)
     } else if (props.sisalto == "X") {
         return (<label id={props.id} className="peliruutu">[{musta}]</label>)
     } else {
@@ -390,6 +393,12 @@ function Ruutu(props) {
 }
 
 function Tyhja(props) {
+    /* jshint ignore: start */
+    return <label name="tyhja"> </label>
+    /* jshint ignore: end */
+}
+
+function TyhjaDropilla(props) {
     /* jshint ignore: start */
     return <label onDragOver={props.teeDragOver} onDrop={props.teeDrop} name="tyhja"> </label>
     /* jshint ignore: end */
