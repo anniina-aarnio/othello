@@ -223,9 +223,135 @@ function Pelikokonaisuus(props) {
                     let suunnat = vieressaOnVastustaja(vastustaja, i, j);
                     if (suunnat.length > 0) {
                         console.log("vieressä ", i, j, "olisi mahdollinen", vastustaja, "suunta", suunnat);
+                        for (let b = 0; b < suunnat.length; b++) {
+                            if (omaVastustajanTakana(suunnat[b], i, j, vastustaja, oma)) {
+                                taulukko[i][j] = omaMahdollinen;
+                            } 
+                        }
                     }
                 }
             }
+        }
+
+        function omaVastustajanTakana(suunta, y, x, vMerkki, oMerkki) {
+            //ylös
+            if (suunta == 0) {
+                for (let i=y-1; i > 0; i--) {
+                    if (taulukko[i][x] == vMerkki) {
+                        continue;
+                    } else if (taulukko[i][x] == oMerkki) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            // yläoikealle
+            if (suunta == 1) {
+                let i=y-1;
+                for (let j = x+1; j < taulukko.length; j++) {
+                    if (i < 0) {
+                        return false;
+                    }
+                    if (taulukko[i][j] == vMerkki) {
+                        i--;
+                        continue;
+                    } else if (taulukko[i][j] == oMerkki) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            // oikealle
+            if (suunta == 2) {
+                for (let j = x+1; x < taulukko.length; j++) {
+                    if (taulukko[y][j] == vMerkki) {
+                        continue;
+                    } else if (taulukko[y][j] == oMerkki) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            // alaoikealle
+            if (suunta == 3) {
+                let i = y+1;
+                for (let j = x+1; x < taulukko.length; j++) {
+                    if (i > taulukko.length) {
+                        return false;
+                    }
+                    if (taulukko[i][j] == vMerkki) {
+                        i++;
+                        continue;
+                    } else if (taulukko[i][j] == oMerkki) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            // alas
+            if (suunta == 4) {
+                for (let i=y+1; i < taulukko.length; i++) {
+                    if (taulukko[i][x] == vMerkki) {
+                        continue;
+                    } else if (taulukko[i][x] == oMerkki) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            // alavasemmalle
+            if (suunta == 5) {
+                let i = y+1;
+                for (let j = x-1; j >= 0; j--) {
+                    if (i > taulukko.length) {
+                        return false;
+                    }
+                    if (taulukko[i][j] == vMerkki) {
+                        i++;
+                        continue;
+                    } else if (taulukko[i][j] == oMerkki) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            // vasemmalle
+            if (suunta == 6) {
+                for (let j = x-1; j >= 0; j--) {
+                    if (taulukko[y][j] == vMerkki) {
+                        continue;
+                    } else if (taulukko[y][j] == oMerkki) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            // ylävasemmalle
+            if (suunta == 7) {
+                let i = y-1;
+                for (let j = x-1; j >= 0; j--) {
+                    if (i < 0) {
+                        return false;
+                    }
+                    if (taulukko[i][j] == vMerkki) {
+                        i--;
+                        continue;
+                    } else if (taulukko[i][j] == oMerkki) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            console.log("omaVastustajanTakana:",suunta, y, x);
+            return false;
         }
 
         /**
