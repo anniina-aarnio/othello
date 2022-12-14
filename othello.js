@@ -233,6 +233,16 @@ function Pelikokonaisuus(props) {
             }
         }
 
+        /**
+         * Katsoo suunnan perusteella, onko vastustajan nappulan takana
+         * oma nappula
+         * @param {Number} suunta numero: 0, 1, 2, 3, 4, 5, 6, 7
+         * @param {Number} y vastustajan pisteen, josta lähdetään katsomaan, y
+         * @param {Number} x vastustajan pisteen, josta lähdetään katsomaan, x
+         * @param {String} vMerkki vastustajan merkki
+         * @param {String} oMerkki oma merkki
+         * @returns true, jos siinä suunnassa on oma merkki takana, false jos ei ole
+         */
         function omaVastustajanTakana(suunta, y, x, vMerkki, oMerkki) {
             //ylös
             if (suunta == 0) {
