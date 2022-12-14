@@ -383,7 +383,7 @@ function Ruutu(props) {
         return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)
     } else if (props.sisalto == "r") {
         return (<label id={props.id}
-                className="peliruutu">[{tyhjaDropilla}]</label>)
+                className="tiputus">[{tyhjaDropilla}]</label>)
     } else if (props.sisalto == "X") {
         return (<label id={props.id} className="peliruutu">[{musta}]</label>)
     } else {

@@ -33,6 +33,12 @@ h1 {
     size: auto;
 }
 
+.tiputus {
+    margin: .1em;
+    size: auto;
+    background-color: lightgreen;
+}
+
 /* Pelilaudan vieressä */
 
 #sivuosa {
