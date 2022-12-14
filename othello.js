@@ -178,6 +178,13 @@ function PiiloutuvaLomake(props) {
 
 /**
  * Ylläpitää pelin kaikkea toiminnallisuutta
+ * Ruudut-statessa pysyy tieto mustien ja valkoisten nappuloiden tilanteesta
+ * - "X" kuvaa mustia nappuloita
+ * - "O" valkoisia nappuloita
+ * - " " tyhjiä paikkoja
+ * - "r" reunapaikkoja (eli tyhjiä, joissa vähintään yksi X tai O vieressä)
+ * - "x" mahdollisia paikkoja mustalle
+ * - "o" mahdollisia paikkoja valkoiselle
  * @param {Object} props 
  * @returns 
  */
@@ -195,8 +202,27 @@ function Pelikokonaisuus(props) {
     const [ruudut, setRuudut] = React.useState(alkutilanne);
     const [vuoro, setVuoro] = React.useState("musta");
 
-    function laskeMahdollisetPaikat() {
-        let uudetRuudut = kopioiTaulukko(ruudut);
+    function laskeMahdollisetPaikat(taulukko) {
+        // etsitään vastakkaista kuin oma vuoro on
+
+        let vuorossa = "X";
+        let vastustaja = "O";
+        let reuna = "r";
+        if (vuoro == "valkoinen") {
+            vuorossa = "O";
+            vastustaja = "X";
+        }
+
+        // käydään läpi kaikki ruudut
+        for (let i = 0; i < taulukko.length; i++) {
+            for (let j = 0; j < taulukko[i].length; j++) {
+                let ruutu = taulukko[i][j];
+                // jos on tyhjä ruutu 
+                if (ruutu == reuna) {
+                    console.log("reunapaikka", i, j);
+                }
+            }
+        }
     }
 
 
@@ -208,6 +234,9 @@ function Pelikokonaisuus(props) {
     let handleChange = function(koordinaatit, merkki) {
         let uudetRuudut = kopioiTaulukko(ruudut);
         uudetRuudut[koordinaatit.y][koordinaatit.x] = merkki;
+
+        laskeMahdollisetPaikat(uudetRuudut);
+
         setRuudut(uudetRuudut);
 
         if (vuoro == "musta") {
@@ -217,6 +246,7 @@ function Pelikokonaisuus(props) {
         }
     };
 
+    // lasketaan tämän hetken pisteet pelilaudalla
     let pisteet = {pelaaja1: 0, pelaaja2: 0};
     for (let i = 0; i < props.koko; i++) {
         for (let j = 0; j < props.koko; j++) {
@@ -482,11 +512,14 @@ root.render(
 /**
  * Ottaa parametrina taulukon sivun pituuden ja luo sen perusteella taulukon,
  * jossa on alkuasetelma pelinappuloita valmiina
- * esim. koko = 4: (_ tarkoittaa tyhjää ruutua)
- * _ _ _ _
- * _ x o _
- * _ o x _
- * _ _ _ _
+ * X on musta, O on valkoinen ja r on reunapaikka
+ * esim. koko = 6: (_ tarkoittaa tyhjää ruutua)
+ * _ _ _ _ _ _
+ * _ r r r r _
+ * _ r x o r _
+ * _ r o x r _
+ * _ r r r r _
+ * _ _ _ _ _ _
  * @param {Number} koko 
  * @returns taulukko, jossa ruudut jokaiselle pelilaudan ruudulle alkutilanteena
  */
@@ -497,7 +530,31 @@ function luoAlkutilanne(koko) {
     for (let i = 0; i < koko; i++) {
         let rivi = [];
         for (let j = 0; j < koko; j++) {
-            if (i == keski -1 && j == keski - 1) {
+            if (i == keski -2 && j == keski-2) {
+                rivi.push("r");
+            } else if (i == keski-2 && j == keski -1) {
+                rivi.push("r");
+            } else if (i == keski-2 && j== keski) {
+                rivi.push("r");
+            } else if (i == keski-2 && j== keski + 1) {
+                rivi.push("r");
+            } else if (i == keski-1 && j == keski -2) {
+                rivi.push("r");
+            } else if (i == keski-1 && j == keski +1) {
+                rivi.push("r");
+            } else if (i == keski && j == keski - 2) {
+                rivi.push("r");
+            } else if (i == keski && j == keski + 1) {
+                rivi.push("r");
+            } else if (i == keski+1 && j == keski - 2) {
+                rivi.push("r");
+            } else if (i == keski+1 && j == keski -1) {
+                rivi.push("r");
+            } else if (i== keski+1 && j == keski) {
+                rivi.push("r");
+            } else if (i == keski+1 && j == keski+ 1) {
+                rivi.push("r");
+            } else if (i == keski -1 && j == keski - 1) {
                 rivi.push("X");
             } else if (i == keski -1 && j == keski) {
                 rivi.push("O");
@@ -510,6 +567,7 @@ function luoAlkutilanne(koko) {
             }
         }
         tyhjaTaulukko.push(rivi);
+        console.log(rivi);
     }
     return tyhjaTaulukko;
 }
@@ -539,10 +597,7 @@ function kopioiTaulukko(taulukko) {
     let uudetRuudut = [];
     for (let i = 0; i < taulukko.length; i++) {
         let rivi = [...taulukko[i]];
-        console.log(rivi);
         uudetRuudut.push(rivi);
     }
-    console.log("kopioiTaulukko", uudetRuudut);
     return uudetRuudut;
 }
-
