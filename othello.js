@@ -647,7 +647,13 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
 
     
     console.log("mahdolliset:",seuraavanVuorossaOlevanMahdollisetPaikat);
+    // jos mahdolliset paikat oli tyhjä lista, etsii uudestaan samaksi jäävän vuoron merkit
     if (seuraavanVuorossaOlevanMahdollisetPaikat.length == 0) {
+        if (vuoro == "valkoinen") {
+            etsiSeuraavanMahdollisetPaikat(taulukko, "musta");
+        } else {
+            etsiSeuraavanMahdollisetPaikat(taulukko, "valkoinen");
+        }
         return false;
     } else {
         return true;
@@ -657,7 +663,7 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
 }
 
 
-    /**
+/**
      * Kirjaa uudet reunapalamerkinnät juuri laitetun merkin ympärillä
      * oleviin tyhjiin ruutuihin
      * @param {Array} taulukko 
@@ -691,6 +697,12 @@ function kirjaaUudetReunapaikat(taulukko, koordinaatit) {
     }
 }
 
+/**
+ * Vaihtaa väliin jääneet nappulat omiksi
+ * @param {Array} taulukko nappuloista
+ * @param {Object} koordinaatit johon viimeisin nappula laitettiin
+ * @param {String} vuoro "musta" tai "valkoinen"
+ */
 function vaihdaValiinJaavatVastustajanNappulatOmiksi(taulukko, koordinaatit, vuoro) {
     let vuoroOli = vuoro;
     
@@ -795,6 +807,13 @@ function vieressaOnVastustaja(taulukko, vMerkki, y, x) {
     return suunnat;
 }
 
+/**
+ * Ottaa vastaan taulukon ja vuoron
+ * Palauttaa listan, joissa on vaihdettavat ruudut
+ * @param {Array} taulukko 
+ * @param {String} vuoro "musta" tai "valkoinen" 
+ * @returns 
+ */
 function etsiSeuraavanMahdollisetPaikat(taulukko, vuoro) {
     // MUUTETAAN REUNAPALOJEN TIEDOT OIKEAKSI
     // etsitään vastakkaista kuin oma vuoro on
