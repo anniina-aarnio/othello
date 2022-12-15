@@ -7,7 +7,8 @@ function App(props) {
         "pelaaja1": "",
         "pelaaja2": "",
         "kentanKoko": 4,
-        "nakyvissa": true
+        "nakyvissa": true,
+        "voittaja": ""
     });
 
     /**
@@ -72,6 +73,16 @@ function App(props) {
         setLomake(uusilomake);
     };
 
+    /**
+     * 
+     * @param {String} voittaja 
+     */
+    let handleLoppu = function(voittaja) {
+        let uusilomake = {...lomake};
+        uusilomake.voittaja = voittaja;
+        setLomake(uusilomake);
+    };
+
     /* jshint ignore: start */
     return (
         <div>
@@ -86,7 +97,9 @@ function App(props) {
                 lomakeNakyvissa={lomake.nakyvissa}
                 koko={lomake.kentanKoko}
                 pelaaja1={lomake.pelaaja1}
-                pelaaja2={lomake.pelaaja2} />
+                pelaaja2={lomake.pelaaja2}
+                lopetus={handleLoppu}
+                voittaja={lomake.voittaja}/>
         </div>
     )
     /* jshint ignore: end */
@@ -223,16 +236,14 @@ function Pelikokonaisuus(props) {
                 setVuoro("musta");
             }
         }
-        // jos 
+        // jos kumpikaan ei voi enää laittaa joko asemoinnin vuoksi
+        // tai siksi että tyhjiä paikkoja ei enää ole
         if (mahdollisiaPaikkoja.kummallakaanEiVuoroa) {
             loppu();
         }
     };
 
-    
-    function loppu() {
-        console.log("loppu!");
-    }
+
 
     // lasketaan tämän hetken pisteet pelilaudalla
     let pisteet = {pelaaja1: 0, pelaaja2: 0};
@@ -244,6 +255,18 @@ function Pelikokonaisuus(props) {
                 pisteet.pelaaja2 += 1;
             }
         }
+    }
+
+        
+    function loppu() {
+        let voittaja = "";
+        if (pisteet.pelaaja1 > pisteet.pelaaja2) {
+            voittaja = "pelaaja1";
+        } else {
+            voittaja = "pelaaja2";
+        }
+        props.lopetus(voittaja);
+    /* jshint ignore:end*/
     }
 
 
@@ -259,7 +282,8 @@ function Pelikokonaisuus(props) {
                 pelaaja1={props.pelaaja1}
                 pelaaja2={props.pelaaja2}
                 pisteet={pisteet}
-                vuoro={vuoro}/>
+                vuoro={vuoro}
+                voittaja={props.voittaja}/>
         </div>
     )
     /* jshint ignore:end*/
@@ -429,7 +453,8 @@ function Musta(props) {
 
 function PelilaudanSivu(props) {
     /* jshint ignore:start */
-    return (
+    if (props.voittaja == "") {
+        return (
         <div id="sivuosa">
             <PelaajanTiedot
                 pelaaja={props.pelaaja1}
@@ -443,10 +468,44 @@ function PelilaudanSivu(props) {
                 color="valkoinen"
                 merkki="O"
                 vuoro={props.vuoro}/>
-
-
-        </div>
-    )
+        </div>)
+    } else {
+        if (props.voittaja == "pelaaja1") {
+            return (<div id="sivuosa">
+            <PelaajanTiedot
+                pelaaja={props.pelaaja1}
+                pisteet={props.pisteet.pelaaja1}
+                color="musta"
+                merkki="X"
+                vuoro={props.vuoro}
+                voittaja={true}/>
+            <PelaajanTiedot
+                pelaaja={props.pelaaja2}
+                pisteet={props.pisteet.pelaaja2}
+                color="valkoinen"
+                merkki="O"
+                vuoro={props.vuoro}/>
+        </div>)
+        }
+        else {
+            return (
+            <div id="sivuosa">
+            <PelaajanTiedot
+                pelaaja={props.pelaaja1}
+                pisteet={props.pisteet.pelaaja1}
+                color="musta"
+                merkki="X"
+                vuoro={props.vuoro}/>
+            <PelaajanTiedot
+                pelaaja={props.pelaaja2}
+                pisteet={props.pisteet.pelaaja2}
+                color="valkoinen"
+                merkki="O"
+                vuoro={props.vuoro}
+                voittaja={true}/>
+        </div>)
+        }
+    }
     /* jshint ignore:end */
 }
 
@@ -455,7 +514,7 @@ function PelaajanTiedot(props) {
     return (
         <div id="pelaajatiedot">
             <div>
-                <label>{props.pelaaja}</label>
+                <span style={{fontWeight: props.voittaja ? 'bold' : 'normal'}}>{props.pelaaja}</span>
             </div>
             <div>
                 <label>Pisteet:{props.pisteet}</label>
@@ -464,7 +523,6 @@ function PelaajanTiedot(props) {
                 <Pelimerkki vuoro={props.vuoro} color={props.color} merkki={props.merkki}/>
             </div>
         </div>
-
     )
     /* jshint ignore:end */
 }
@@ -993,7 +1051,17 @@ function omaVastustajanTakana(taulukko, suunta, y, x, vMerkki, oMerkki) {
 }
     
     
-    
+/**
+ * 
+ * @param {Array} taulukko 
+ * @param {Number} suunta 
+ * @param {Number} y 
+ * @param {Number} x 
+ * @param {String} oMerkki 
+ * @param {String} vMerkki 
+ * @param {Array} vaihdettavienLista 
+ * @returns 
+ */
 function lisaaVaihdettavatListaan(taulukko, suunta, y, x, oMerkki, vMerkki, vaihdettavienLista) {
     //ylös
     if (suunta == 0) {
