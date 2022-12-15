@@ -641,411 +641,19 @@ function kopioiTaulukko(taulukko) {
 function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
     kirjaaUudetReunapaikat(taulukko, koordinaatit);
 
-    let vuoroOli = vuoro;
-    let vuoroSeuraavaksi = "";
-    if (vuoroOli == "musta") {
-        vuoroSeuraavaksi = "valkoinen";
-    } else {
-        vuoroSeuraavaksi = "musta";
-    }
+    vaihdaValiinJaavatVastustajanNappulatOmiksi(taulukko, koordinaatit, vuoro);
     
-    // VAIHDETAAN VÄLIIN JÄÄNEET VASTUSTAJAN MERKIT OMIKSI
-    // oletuksena musta, mutta jos olikin valkoisen vuoro niin toisinpäin
-    let omaNyt = "X";
-    let vastustajaNyt = "O";
-    let yNyt = koordinaatit.y;
-    let xNyt = koordinaatit.x;
-    if (vuoroOli == "valkoinen") {
-        omaNyt = "O";
-        vastustajaNyt = "X";
-    }
+    let seuraavanVuorossaOlevanMahdollisetPaikat = etsiSeuraavanMahdollisetPaikat(taulukko, vuoro);
 
-    let vaihdettavienSuunnat = vieressaOnVastustaja(vastustajaNyt, yNyt, xNyt);
-
-    let vaihdettavatRuudut = [];
-    // tarkistetaan vierestä löytyneiden vastustajien suunnat
-    for (let b = 0; b < vaihdettavienSuunnat.length; b++) {
-        // jos oma on vastustajan merkin takana, lisätään listaan
-        let onkoOmaVastustajanTakana =
-            omaVastustajanTakana(vaihdettavienSuunnat[b], yNyt, xNyt, vastustajaNyt, omaNyt);
-        // tulostetaan tämän hetken tilanne
-        if (onkoOmaVastustajanTakana) {
-            lisaaVaihdettavatListaan(vaihdettavienSuunnat[b], koordinaatit.y, koordinaatit.x, omaNyt, vastustajaNyt, vaihdettavatRuudut);
-        }
-    }
-
-    // vaihdetaan listassa olevat ruudut
-    for (let piste of vaihdettavatRuudut) {
-        taulukko[piste[0]][piste[1]] = omaNyt;
-    }
-
-    // MUUTETAAN REUNAPALOJEN TIEDOT OIKEAKSI
-    // etsitään vastakkaista kuin oma vuoro on
-    // oletuksena musta, mutta jos valkoisen vuoro, vaihdetaan tiedot valkoiseksi
-
-    let oma = "X";
-    let vastustaja = "O";
-    let omaMahdollinen = "x";
-    if (vuoroSeuraavaksi == "valkoinen") {
-        oma = "O";
-        vastustaja = "X";
-        omaMahdollinen = "o";
-    }
-
-    let mahdolliset = [];
-    // käydään läpi kaikki ruudut
-    for (let i = 0; i < taulukko.length; i++) {
-        for (let j = 0; j < taulukko[i].length; j++) {
-            let ruutu = taulukko[i][j];
-
-            // jos on reunaruutu (eli vieressä on mikä tahansa nappula) 
-            if (ruutu == "r" || ruutu == "x" || ruutu == "o") {
-                let suunnat = vieressaOnVastustaja(vastustaja, i, j);
-
-                // jos löytyi vähintään yksi suunta
-                if (suunnat.length > 0) {
-
-                    // käydään suunnat läpi
-                    for (let b = 0; b < suunnat.length; b++) {
-                        if (omaVastustajanTakana(suunnat[b], i, j, vastustaja, oma)) {
-                            mahdolliset.push({x:j, y:i});
-                        } else {
-                            taulukko[i][j] = "r";
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    for (let m of mahdolliset) {
-        console.log("vaihdettu", m.y, m.x, omaMahdollinen);
-        taulukko[m.y][m.x] = omaMahdollinen;
-    }
-    console.log("mahdolliset:",mahdolliset);
-    if (mahdolliset.length == 0) {
+    
+    console.log("mahdolliset:",seuraavanVuorossaOlevanMahdollisetPaikat);
+    if (seuraavanVuorossaOlevanMahdollisetPaikat.length == 0) {
         return false;
     } else {
         return true;
     }
 
-    /**
-     * Katsoo suunnan perusteella, onko vastustajan nappulan takana
-     * oma nappula
-     * @param {Number} suunta numero: 0, 1, 2, 3, 4, 5, 6, 7
-     * @param {Number} y vastustajan pisteen, josta lähdetään katsomaan, y
-     * @param {Number} x vastustajan pisteen, josta lähdetään katsomaan, x
-     * @param {String} vMerkki vastustajan merkki
-     * @param {String} oMerkki oma merkki
-     * @returns {Boolean} true, jos siinä suunnassa on oma merkki takana, false jos ei ole
-     */
-    function omaVastustajanTakana(suunta, y, x, vMerkki, oMerkki) {
-        //ylös
-        if (suunta == 0) {
-            for (let i=y-1; i > 0; i--) {
-                if (taulukko[i][x] == vMerkki) {
-                    continue;
-                } else if (taulukko[i][x] == oMerkki) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        // yläoikealle
-        if (suunta == 1) {
-            let i=y-1;
-            for (let j = x+1; j < taulukko.length; j++) {
-                if (i < 0) {
-                    return false;
-                }
-                if (taulukko[i][j] == vMerkki) {
-                    i--;
-                    continue;
-                } else if (taulukko[i][j] == oMerkki) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        // oikealle
-        if (suunta == 2) {
-            for (let j = x+1; x < taulukko.length; j++) {
-                if (taulukko[y][j] == vMerkki) {
-                    continue;
-                } else if (taulukko[y][j] == oMerkki) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        // alaoikealle
-        if (suunta == 3) {
-            let i = y+1;
-            for (let j = x+1; x < taulukko.length; j++) {
-                if (i >= taulukko.length) {
-                    return false;
-                }
-                if (taulukko[i][j] == vMerkki) {
-                    i++;
-                    continue;
-                } else if (taulukko[i][j] == oMerkki) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        // alas
-        if (suunta == 4) {
-            for (let i=y+1; i < taulukko.length; i++) {
-                if (taulukko[i][x] == vMerkki) {
-                    continue;
-                } else if (taulukko[i][x] == oMerkki) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        // alavasemmalle
-        if (suunta == 5) {
-            let i = y+1;
-            for (let j = x-1; j >= 0; j--) {
-                if (i >= taulukko.length) {
-                    return false;
-                }
-                if (taulukko[i][j] == vMerkki) {
-                    i++;
-                    continue;
-                } else if (taulukko[i][j] == oMerkki) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        // vasemmalle
-        if (suunta == 6) {
-            for (let j = x-1; j >= 0; j--) {
-                if (taulukko[y][j] == vMerkki) {
-                    continue;
-                } else if (taulukko[y][j] == oMerkki) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        // ylävasemmalle
-        if (suunta == 7) {
-            let i = y-1;
-            for (let j = x-1; j >= 0; j--) {
-                if (i < 0) {
-                    return false;
-                }
-                if (taulukko[i][j] == vMerkki) {
-                    i--;
-                    continue;
-                } else if (taulukko[i][j] == oMerkki) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
 
-    /**
-     * katsoo onko ympärillä viereisissä vastustajan merkki
-     * ja jos on, tarkistaa onko sen takana heti tai myöhemmin oma merkki
-     * @param {String} vMerkki vastustajan merkki, jota etsitään
-     * @param {Number} y pisteen, jonka mahdollista sopivuutta tutkitaan, y
-     * @param {Number} x pisteen, jonka mahdollista sopivuutta tutkitaan, x
-     * @param {String} oMerkki oma merkki, joka tulisi olla vastustajan takana
-     * @return -1 jos ei vieressä vastustajan merkkiä
-     */
-    function vieressaOnVastustaja(vMerkki, y, x) {
-        let alkuY = y-1;
-        if (alkuY < 0) {
-            alkuY = 0;
-        }
-        let alkuX = x-1;
-        if (alkuX < 0) {
-            alkuX = 0;
-        }
-        let loppuY = y+1;
-        if (loppuY >= taulukko.length -1) {
-            loppuY = taulukko.length -1;
-        }
-        let loppuX = x+1;
-        if (loppuX >= taulukko.length -1) {
-            loppuX = taulukko.length -1;
-        }
-
-        let suunnat = [];
-        for (let i = alkuY; i <= loppuY; i++) {
-            for (let j = alkuX; j <= loppuX; j++) {
-                if (taulukko[i][j] == vMerkki) {
-                    // ylöspäin suunta on 0
-                    if (i-y < 0 && j == x) {
-                        suunnat.push(0);
-                    }
-                    // oikealle ylös suunta on 1
-                    if (i-y < 0 && j-x > 0) {
-                        suunnat.push(1);
-                    }
-                    // oikealle suunta on 2
-                    if (i == y && j-x > 0) {
-                        suunnat.push(2);
-                    }
-                    // oikealle alas suunta on 3
-                    if (i-y > 0 && j-x > 0) {
-                        suunnat.push(3);
-                    }
-                    // alas suunta on 4
-                    if (i-y > 0 && j == x) {
-                        suunnat.push(4);
-                    }
-                    // vasemmalle alas suunta on 5
-                    if (i-y > 0 && j-x < 0) {
-                        suunnat.push(5);
-                    }
-                    // vasemmalle suunta on 6
-                    if (i == y && j-x < 0) {
-                        suunnat.push(6);
-                    }
-                    // vasemmalle ylös suunta on 7
-                    if (i-y < 0 && j-x < 0) {
-                        suunnat.push(7);
-                    }
-                }
-            }
-        }
-        return suunnat;
-    }
-
-    function lisaaVaihdettavatListaan(suunta, y, x, oMerkki, vMerkki, vaihdettavienLista) {
-        //ylös
-        if (suunta == 0) {
-            for (let i=y-1; i > 0; i--) {
-                if (taulukko[i][x] == vMerkki) {
-                    vaihdettavienLista.push([i,x]);
-                    continue;
-                }
-                if (taulukko[i][x] == oMerkki) {
-                    return;
-                } 
-            }
-        }
-        // yläoikealle
-        if (suunta == 1) {
-            let i=y-1;
-            for (let j = x+1; j < taulukko.length; j++) {
-                if (i < 0) {
-                    return;
-                }
-                if (taulukko[i][j] == vMerkki) {
-                    vaihdettavienLista.push([i,j]);
-                    i--;
-                    continue;
-                }
-                if (taulukko[i][j] == oMerkki) {
-                    return;
-                }
-            }
-        }
-        // oikealle
-        if (suunta == 2) {
-            for (let j = x+1; x < taulukko.length; j++) {
-                if (taulukko[y][j] == vMerkki) {
-                    vaihdettavienLista.push([y,j]);
-                    continue;
-                }
-                if (taulukko[y][j] == oMerkki) {
-                    return;
-                }
-            }
-        }
-        // alaoikealle
-        if (suunta == 3) {
-            let i = y+1;
-            for (let j = x+1; x < taulukko.length; j++) {
-                if (i >= taulukko.length) {
-                    return;
-                }
-                if (taulukko[i][j] == vMerkki) {
-                    vaihdettavienLista.push([i,j]);
-                    i++;
-                    continue;
-                }
-                if (taulukko[i][j] == oMerkki) {
-                    return;
-                }
-            }
-        }
-        // alas
-        if (suunta == 4) {
-            for (let i=y+1; i < taulukko.length; i++) {
-                if (taulukko[i][x] == vMerkki) {
-                    vaihdettavienLista.push([i,x]);
-                    continue;
-                }
-                if (taulukko[i][x] == oMerkki) {
-                    return;
-                }
-            }
-        }
-        // alavasemmalle
-        if (suunta == 5) {
-            let i = y+1;
-            for (let j = x-1; j >= 0; j--) {
-                if (i >= taulukko.length) {
-                    return;
-                }
-                if (taulukko[i][j] == vMerkki) {
-                    vaihdettavienLista.push([i,j]);
-                    i++;
-                    continue;
-                }
-                if (taulukko[i][j] == oMerkki) {
-                    return;
-                }
-            }
-        }
-        // vasemmalle
-        if (suunta == 6) {
-            for (let j = x-1; j >= 0; j--) {
-                if (taulukko[y][j] == vMerkki) {
-                    vaihdettavienLista.push([y,j]);
-                    continue;
-                }
-                if (taulukko[y][j] == oMerkki) {    
-                    return;
-                }
-            }
-        }
-        // ylävasemmalle
-        if (suunta == 7) {
-            let i = y-1;
-            for (let j = x-1; j >= 0; j--) {
-                if (i < 0) {
-                    return;
-                }
-                if (taulukko[i][j] == vMerkki) {
-                    vaihdettavienLista.push([i,j]);
-                    i--;
-                    continue;
-                }
-                if (taulukko[i][j] == oMerkki) {
-                    return;
-                }
-            }
-        }
-    }
 }
 
 
@@ -1078,6 +686,410 @@ function kirjaaUudetReunapaikat(taulukko, koordinaatit) {
         for (let j = alkuX; j <= loppuX; j++ ) {
             if (taulukko[i][j] == " ") {
                 taulukko[i][j] = "r";
+            }
+        }
+    }
+}
+
+function vaihdaValiinJaavatVastustajanNappulatOmiksi(taulukko, koordinaatit, vuoro) {
+    let vuoroOli = vuoro;
+    
+    // VAIHDETAAN VÄLIIN JÄÄNEET VASTUSTAJAN MERKIT OMIKSI
+    // oletuksena musta, mutta jos olikin valkoisen vuoro niin toisinpäin
+    let omaNyt = "X";
+    let vastustajaNyt = "O";
+    let yNyt = koordinaatit.y;
+    let xNyt = koordinaatit.x;
+    if (vuoroOli == "valkoinen") {
+        omaNyt = "O";
+        vastustajaNyt = "X";
+    }
+
+    let vaihdettavienSuunnat = vieressaOnVastustaja(taulukko, vastustajaNyt, yNyt, xNyt);
+
+    let vaihdettavatRuudut = [];
+    // tarkistetaan vierestä löytyneiden vastustajien suunnat
+    for (let b = 0; b < vaihdettavienSuunnat.length; b++) {
+        // jos oma on vastustajan merkin takana, lisätään listaan
+        let onkoOmaVastustajanTakana =
+            omaVastustajanTakana(taulukko, vaihdettavienSuunnat[b], yNyt, xNyt, vastustajaNyt, omaNyt);
+        // tulostetaan tämän hetken tilanne
+        if (onkoOmaVastustajanTakana) {
+            lisaaVaihdettavatListaan(taulukko, vaihdettavienSuunnat[b], koordinaatit.y, koordinaatit.x, omaNyt, vastustajaNyt, vaihdettavatRuudut);
+        }
+    }
+
+    // vaihdetaan listassa olevat ruudut
+    for (let piste of vaihdettavatRuudut) {
+        taulukko[piste[0]][piste[1]] = omaNyt;
+    }
+
+}
+
+/**
+ * katsoo onko ympärillä viereisissä vastustajan merkki
+ * ja jos on, tarkistaa onko sen takana heti tai myöhemmin oma merkki
+ * @param {String} vMerkki vastustajan merkki, jota etsitään
+ * @param {Number} y pisteen, jonka mahdollista sopivuutta tutkitaan, y
+ * @param {Number} x pisteen, jonka mahdollista sopivuutta tutkitaan, x
+ * @param {String} oMerkki oma merkki, joka tulisi olla vastustajan takana
+ * @return -1 jos ei vieressä vastustajan merkkiä
+ */
+function vieressaOnVastustaja(taulukko, vMerkki, y, x) {
+    let alkuY = y-1;
+    if (alkuY < 0) {
+        alkuY = 0;
+    }
+    let alkuX = x-1;
+    if (alkuX < 0) {
+        alkuX = 0;
+    }
+    let loppuY = y+1;
+    if (loppuY >= taulukko.length -1) {
+        loppuY = taulukko.length -1;
+    }
+    let loppuX = x+1;
+    if (loppuX >= taulukko.length -1) {
+        loppuX = taulukko.length -1;
+    }
+
+    let suunnat = [];
+    for (let i = alkuY; i <= loppuY; i++) {
+        for (let j = alkuX; j <= loppuX; j++) {
+            if (taulukko[i][j] == vMerkki) {
+                // ylöspäin suunta on 0
+                if (i-y < 0 && j == x) {
+                    suunnat.push(0);
+                }
+                // oikealle ylös suunta on 1
+                if (i-y < 0 && j-x > 0) {
+                    suunnat.push(1);
+                }
+                // oikealle suunta on 2
+                if (i == y && j-x > 0) {
+                    suunnat.push(2);
+                }
+                // oikealle alas suunta on 3
+                if (i-y > 0 && j-x > 0) {
+                    suunnat.push(3);
+                }
+                // alas suunta on 4
+                if (i-y > 0 && j == x) {
+                    suunnat.push(4);
+                }
+                // vasemmalle alas suunta on 5
+                if (i-y > 0 && j-x < 0) {
+                    suunnat.push(5);
+                }
+                // vasemmalle suunta on 6
+                if (i == y && j-x < 0) {
+                    suunnat.push(6);
+                }
+                // vasemmalle ylös suunta on 7
+                if (i-y < 0 && j-x < 0) {
+                    suunnat.push(7);
+                }
+            }
+        }
+    }
+    return suunnat;
+}
+
+function etsiSeuraavanMahdollisetPaikat(taulukko, vuoro) {
+    // MUUTETAAN REUNAPALOJEN TIEDOT OIKEAKSI
+    // etsitään vastakkaista kuin oma vuoro on
+    // oletuksena musta, mutta jos valkoisen vuoro, vaihdetaan tiedot valkoiseksi
+
+    let vuoroOli = vuoro;
+    let oma = "X";
+    let vastustaja = "O";
+    let omaMahdollinen = "x";
+
+    if (vuoroOli == "musta") {
+        oma = "O";
+        vastustaja = "X";
+        omaMahdollinen = "o";
+    }
+
+    let mahdolliset = [];
+    // käydään läpi kaikki ruudut
+    for (let i = 0; i < taulukko.length; i++) {
+        for (let j = 0; j < taulukko[i].length; j++) {
+            let ruutu = taulukko[i][j];
+
+            // jos on reunaruutu (eli vieressä on mikä tahansa nappula) 
+            if (ruutu == "r" || ruutu == "x" || ruutu == "o") {
+                let suunnat = vieressaOnVastustaja(taulukko, vastustaja, i, j);
+
+                // jos löytyi vähintään yksi suunta
+                if (suunnat.length > 0) {
+
+                    // käydään suunnat läpi
+                    for (let b = 0; b < suunnat.length; b++) {
+                        if (omaVastustajanTakana(taulukko, suunnat[b], i, j, vastustaja, oma)) {
+                            mahdolliset.push({x:j, y:i});
+                        } else {
+                            taulukko[i][j] = "r";
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (let m of mahdolliset) {
+        console.log("vaihdettu", m.y, m.x, omaMahdollinen);
+        taulukko[m.y][m.x] = omaMahdollinen;
+    }
+    return mahdolliset;
+}
+
+/**
+ * Katsoo suunnan perusteella, onko vastustajan nappulan takana
+ * oma nappula
+ * @param {Number} suunta numero: 0, 1, 2, 3, 4, 5, 6, 7
+ * @param {Number} y vastustajan pisteen, josta lähdetään katsomaan, y
+ * @param {Number} x vastustajan pisteen, josta lähdetään katsomaan, x
+ * @param {String} vMerkki vastustajan merkki
+ * @param {String} oMerkki oma merkki
+ * @returns {Boolean} true, jos siinä suunnassa on oma merkki takana, false jos ei ole
+ */
+function omaVastustajanTakana(taulukko, suunta, y, x, vMerkki, oMerkki) {
+    //ylös
+    if (suunta == 0) {
+        for (let i=y-1; i > 0; i--) {
+            if (taulukko[i][x] == vMerkki) {
+                continue;
+            } else if (taulukko[i][x] == oMerkki) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    // yläoikealle
+    if (suunta == 1) {
+        let i=y-1;
+        for (let j = x+1; j < taulukko.length; j++) {
+            if (i < 0) {
+                return false;
+            }
+            if (taulukko[i][j] == vMerkki) {
+                i--;
+                continue;
+            } else if (taulukko[i][j] == oMerkki) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    // oikealle
+    if (suunta == 2) {
+        for (let j = x+1; x < taulukko.length; j++) {
+            if (taulukko[y][j] == vMerkki) {
+                continue;
+            } else if (taulukko[y][j] == oMerkki) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    // alaoikealle
+    if (suunta == 3) {
+        let i = y+1;
+        for (let j = x+1; x < taulukko.length; j++) {
+            if (i >= taulukko.length) {
+                return false;
+            }
+            if (taulukko[i][j] == vMerkki) {
+                i++;
+                continue;
+            } else if (taulukko[i][j] == oMerkki) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    // alas
+    if (suunta == 4) {
+        for (let i=y+1; i < taulukko.length; i++) {
+            if (taulukko[i][x] == vMerkki) {
+                continue;
+            } else if (taulukko[i][x] == oMerkki) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    // alavasemmalle
+    if (suunta == 5) {
+        let i = y+1;
+        for (let j = x-1; j >= 0; j--) {
+            if (i >= taulukko.length) {
+                return false;
+            }
+            if (taulukko[i][j] == vMerkki) {
+                i++;
+                continue;
+            } else if (taulukko[i][j] == oMerkki) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    // vasemmalle
+    if (suunta == 6) {
+        for (let j = x-1; j >= 0; j--) {
+            if (taulukko[y][j] == vMerkki) {
+                continue;
+            } else if (taulukko[y][j] == oMerkki) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    // ylävasemmalle
+    if (suunta == 7) {
+        let i = y-1;
+        for (let j = x-1; j >= 0; j--) {
+            if (i < 0) {
+                return false;
+            }
+            if (taulukko[i][j] == vMerkki) {
+                i--;
+                continue;
+            } else if (taulukko[i][j] == oMerkki) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    return false;
+}
+    
+    
+    
+function lisaaVaihdettavatListaan(taulukko, suunta, y, x, oMerkki, vMerkki, vaihdettavienLista) {
+    //ylös
+    if (suunta == 0) {
+        for (let i=y-1; i > 0; i--) {
+            if (taulukko[i][x] == vMerkki) {
+                vaihdettavienLista.push([i,x]);
+                continue;
+            }
+            if (taulukko[i][x] == oMerkki) {
+                return;
+            } 
+         }
+    }
+    // yläoikealle
+    if (suunta == 1) {
+        let i=y-1;
+        for (let j = x+1; j < taulukko.length; j++) {
+            if (i < 0) {
+                return;
+            }
+            if (taulukko[i][j] == vMerkki) {
+                vaihdettavienLista.push([i,j]);
+                i--;
+                continue;
+            }
+            if (taulukko[i][j] == oMerkki) {
+                return;
+            }
+        }
+    }
+    // oikealle
+    if (suunta == 2) {
+        for (let j = x+1; x < taulukko.length; j++) {
+            if (taulukko[y][j] == vMerkki) {
+                vaihdettavienLista.push([y,j]);
+                continue;
+            }
+            if (taulukko[y][j] == oMerkki) {
+                return;
+            }
+        }
+    }
+    // alaoikealle
+    if (suunta == 3) {
+        let i = y+1;
+        for (let j = x+1; x < taulukko.length; j++) {
+            if (i >= taulukko.length) {
+                return;
+            }
+            if (taulukko[i][j] == vMerkki) {
+                vaihdettavienLista.push([i,j]);
+                i++;
+                continue;
+            }
+            if (taulukko[i][j] == oMerkki) {
+                return;
+            }
+        }
+    }
+    // alas
+    if (suunta == 4) {
+        for (let i=y+1; i < taulukko.length; i++) {
+            if (taulukko[i][x] == vMerkki) {
+                vaihdettavienLista.push([i,x]);
+                continue;
+            }
+            if (taulukko[i][x] == oMerkki) {
+                return;
+            }
+        }
+    }
+    // alavasemmalle
+    if (suunta == 5) {
+        let i = y+1;
+            for (let j = x-1; j >= 0; j--) {
+            if (i >= taulukko.length) {
+                return;
+            }
+            if (taulukko[i][j] == vMerkki) {
+                vaihdettavienLista.push([i,j]);
+                i++;
+                continue;
+            }
+            if (taulukko[i][j] == oMerkki) {
+                return;
+            }
+        }
+    }
+    // vasemmalle
+    if (suunta == 6) {
+        for (let j = x-1; j >= 0; j--) {
+            if (taulukko[y][j] == vMerkki) {
+                vaihdettavienLista.push([y,j]);
+                continue;
+            }
+             if (taulukko[y][j] == oMerkki) {    
+                return;
+            }
+        }
+    }
+    // ylävasemmalle
+    if (suunta == 7) {
+        let i = y-1;
+        for (let j = x-1; j >= 0; j--) {
+            if (i < 0) {
+                return;
+            }
+            if (taulukko[i][j] == vMerkki) {
+                vaihdettavienLista.push([i,j]);
+                i--;
+                continue;
+            }
+            if (taulukko[i][j] == oMerkki) {
+                return;
             }
         }
     }
