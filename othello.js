@@ -223,21 +223,11 @@ function Pelikokonaisuus(props) {
                 setVuoro("musta");
             }
         }
-        if (tyhjiaNolla(uudetRuudut) || mahdollisiaPaikkoja.kummallakaanEiVuoroa) {
+        // jos 
+        if (mahdollisiaPaikkoja.kummallakaanEiVuoroa) {
             loppu();
         }
     };
-
-    function tyhjiaNolla(taulukko) {
-        for (let i = 0; i < props.koko; i++) {
-            for (let j = 0; j < props.koko; j++) {
-                if (taulukko[i][j] == " " || taulukko[i][j] == "r" || taulukko[i][j] == "x" || taulukko[i][j] == "o") {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     
     function loppu() {
