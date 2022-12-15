@@ -699,7 +699,7 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
             let ruutu = taulukko[i][j];
 
             // jos on reunaruutu (eli vieressä on mikä tahansa nappula) 
-            if (ruutu === "r" || ruutu === "x" || ruutu === "o") {
+            if (ruutu == "r" || ruutu == "x" || ruutu == "o") {
                 let suunnat = vieressaOnVastustaja(vastustaja, i, j);
 
                 // jos löytyi vähintään yksi suunta
@@ -719,6 +719,7 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
     }
 
     for (let m of mahdolliset) {
+        console.log("vaihdettu", m.y, m.x, omaMahdollinen);
         taulukko[m.y][m.x] = omaMahdollinen;
     }
     console.log("mahdolliset:",mahdolliset);
