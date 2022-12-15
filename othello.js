@@ -216,14 +216,14 @@ function Pelikokonaisuus(props) {
 
         // jos mahdollisia paikkoja, joihin voi laittaa nappulan löytyy,
         // vuoro vaihtuu, jos ei, vuoro pysyy samana
-        if (mahdollisiaPaikkoja) {
+        if (mahdollisiaPaikkoja.vuoroVaihtuu) {
             if (vuoro == "musta") {
                 setVuoro("valkoinen");
             } else {
                 setVuoro("musta");
             }
         }
-        if (tyhjiaNolla(uudetRuudut)) {
+        if (tyhjiaNolla(uudetRuudut) || mahdollisiaPaikkoja.kummallakaanEiVuoroa) {
             loppu();
         }
     };
@@ -238,6 +238,8 @@ function Pelikokonaisuus(props) {
         }
         return true;
     }
+
+    
     function loppu() {
         console.log("loppu!");
     }
@@ -649,14 +651,21 @@ function paivitaRuutujenTilanne(taulukko, koordinaatit, vuoro) {
     console.log("mahdolliset:",seuraavanVuorossaOlevanMahdollisetPaikat);
     // jos mahdolliset paikat oli tyhjä lista, etsii uudestaan samaksi jäävän vuoron merkit
     if (seuraavanVuorossaOlevanMahdollisetPaikat.length == 0) {
+        let eiKumpaakaan = false;
         if (vuoro == "valkoinen") {
-            etsiSeuraavanMahdollisetPaikat(taulukko, "musta");
+            let takaisin = etsiSeuraavanMahdollisetPaikat(taulukko, "musta");
+            if (takaisin.length == 0) {
+                eiKumpaakaan = true;
+            }
         } else {
-            etsiSeuraavanMahdollisetPaikat(taulukko, "valkoinen");
+            let takaisin = etsiSeuraavanMahdollisetPaikat(taulukko, "valkoinen");
+            if (takaisin.length == 0) {
+                eiKumpaakaan = true;
+            }
         }
-        return false;
+        return {"vuoroVaihtuu":false, "kummallakaanEiVuoroa": eiKumpaakaan};
     } else {
-        return true;
+        return {"vuoroVaihtuu": true};
     }
 
 
