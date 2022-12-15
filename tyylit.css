@@ -1,5 +1,5 @@
 body {
-    background-color: green;
+    background-color: #1c8670;
     font-family: 'Courier New', Courier, monospace;
 }
 
@@ -44,6 +44,7 @@ h1 {
 #sivuosa {
     border: 1px solid white;
     width: 10%;
+    min-width:min-content;
 }
 
 #sivuosa > div {

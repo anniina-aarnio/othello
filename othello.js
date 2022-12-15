@@ -517,7 +517,7 @@ function PelaajanTiedot(props) {
                 <span style={{fontWeight: props.voittaja ? 'bold' : 'normal'}}>{props.pelaaja}</span>
             </div>
             <div>
-                <label>Pisteet:{props.pisteet}</label>
+                <span style={{fontWeight: props.voittaja ? 'bold' : 'normal'}}>Pisteet:{props.pisteet}</span>
             </div>
             <div>
                 <Pelimerkki vuoro={props.vuoro} color={props.color} merkki={props.merkki}/>
