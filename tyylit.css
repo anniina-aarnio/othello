@@ -49,6 +49,7 @@ td {
     border: 1px solid black;
     min-width: 20px;
     min-height: 20px;
+    padding: 0;
 }
 
 /* Pelilaudan vieressä */

@@ -274,7 +274,7 @@ function Pelikokonaisuus(props) {
     /* jshint ignore:start*/
     return (
         <div id="pelikokonaisuus">
-            <Pelilauta2
+            <Pelilauta
                 koko={props.koko}
                 ruudut={ruudut}
                 muutaSisaltoa={handleChange}
@@ -448,7 +448,8 @@ function TyhjaSVGDropilla(props) {
         className={props.name}
         version="1.1"
         width="100"
-        height="100">
+        height="100"
+        style={{backgroundColor:"lightgreen"}}>
     </svg>
     </div>
     /* jshint ignore: end */
@@ -485,12 +486,16 @@ function Pelilauta2(props) {
         let ruutuja = [];
         for (let j = 0; j < props.koko; j++) {
             let id = "x"+ j +"-" + "y" + "i";
-            let ruutu = <Ruutu2 vuoro={props.vuoro} sisalto={props.ruudut[i][j]} muutaSisaltoa={props.muutaSisaltoa} />
+            let ruutu = <Ruutu2
+                            vuoro={props.vuoro}
+                            sisalto={props.ruudut[i][j]}
+                            muutaSisaltoa={props.muutaSisaltoa} />
             ruutuja.push(<td key={id} id={id}>{ruutu}</td>)
         }
         riveja.push(<tr key={i}>{ruutuja}</tr>)
     }
 
+    // palautetaan table, jossa taulukon sisällöt
     return <table>
         <tbody id="pelilauta">
             {riveja}
@@ -500,8 +505,60 @@ function Pelilauta2(props) {
 }
 
 function Ruutu2(props) {
+    // mitä tekee kun raahataan X tai O sivusta päälle
+    let dragOver = function (event) {
+        event.preventDefault();
+        // jos raahattava on mustan nappula
+        if (event.dataTransfer.types.includes("musta")) {
+            event.dataTransfer.dropEffect = "move";
+        // jos raahattava on valkoisen nappula
+        } else if (event.dataTransfer.types.includes("valkoinen")) {
+            event.dataTransfer.dropEffect = "move";
+        // jos raahattava on mitä tahansa muuta
+        } else {
+            event.dataTransfer.dropEffect = "none";
+        }
+    };
+
+    // mitä tekee kun tiputtaa X tai O sivusta päälle
+    let drop = function (event) {
+        event.preventDefault();
+        let dataMusta = event.dataTransfer.getData("musta");
+        let dataValkoinen = event.dataTransfer.getData("valkoinen");
+        let ruutu = ruudunKoordinaatit(event.target.parentElement.parentElement.id);
+        if (dataMusta) {
+            props.muutaSisaltoa(ruutu, "X");
+        } else if (dataValkoinen) {
+            props.muutaSisaltoa(ruutu, "O");
+        } else {
+            console.log("drop jokin muu tiputus");
+        }
+    };
+
     /* jshint ignore: start */
-    return <div className="peliruutu2">{props.sisalto}</div>
+    let taytto;
+    if (props.sisalto == "X") {
+        taytto = <Nappula name="musta" color="black"/>
+    } else if (props.sisalto == "O") {
+        taytto = <Nappula name="valkoinen" color="white" />
+    } else if (props.vuoro == "musta") {
+        if (props.sisalto == "x") {
+            taytto = <TyhjaSVGDropilla name="droppi" teeDragOver={dragOver} teeDrop={drop} />
+        } else {
+            taytto = <TyhjaSVG name="tyhja" />
+        }
+    } else if (props.vuoro == "valkoinen") {
+        if (props.sisalto == "o") {
+            taytto = <TyhjaSVGDropilla name="droppi" teeDragOver={dragOver} teeDrop={drop} />
+        } else {
+            taytto = <TyhjaSVG name="tyhja" />
+        }
+    } else {
+        taytto = <TyhjaSVG name="tyhja"/>
+    }
+
+
+    return <div className="peliruutu2">{taytto}</div>
     /* jshint ignore: end */
 }
 
