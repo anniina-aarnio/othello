@@ -477,13 +477,16 @@ function Nappula(props) {
 }
 
 function Pelilauta2(props) {
+
     /* jshint ignore: start */
+
+
     let riveja = [];
     for (let i = 0; i < props.koko; i++) {
         let ruutuja = [];
         for (let j = 0; j < props.koko; j++) {
             let id = "x"+ j +"-" + "y" + "i";
-            ruutuja.push(<td key={id} id={id}></td>)
+            ruutuja.push(<td key={id} id={id}>{props.ruudut[i][j]}</td>)
         }
         riveja.push(<tr key={i}>{ruutuja}</tr>)
     }
