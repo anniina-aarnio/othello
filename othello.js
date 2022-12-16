@@ -100,7 +100,6 @@ function App(props) {
                 pelaaja2={lomake.pelaaja2}
                 lopetus={handleLoppu}
                 voittaja={lomake.voittaja}/>
-            <Testi />
         </div>
     )
     /* jshint ignore: end */
@@ -376,7 +375,7 @@ function Ruutu(props) {
         event.preventDefault();
         let dataMusta = event.dataTransfer.getData("musta");
         let dataValkoinen = event.dataTransfer.getData("valkoinen");
-        let ruutu = ruudunKoordinaatit(event.target.parentElement.id);
+        let ruutu = ruudunKoordinaatit(event.target.parentElement.parentElement.id);
         if (dataMusta) {
             props.muutaSisaltoa(ruutu, "X");
         } else if (dataValkoinen) {
@@ -389,8 +388,8 @@ function Ruutu(props) {
     /* jshint ignore: start */
     let musta = <Nappula name="musta" color="black" />;
     let valkoinen = <Nappula name="valkoinen" color="white" />;
-    let tyhja = <Tyhja />;
-    let tyhjaDropilla = <TyhjaDropilla teeDragOver={dragOver} teeDrop={drop}/>;
+    let tyhja = <TyhjaSVG />;
+    let tyhjaDropilla = <TyhjaSVGDropilla teeDragOver={dragOver} teeDrop={drop}/>;
 
     // tyhjä tai reunapala jolla ei muuta tietoa
     if (props.sisalto == " " || props.sisalto == "r") {
@@ -438,8 +437,37 @@ function TyhjaDropilla(props) {
     /* jshint ignore: end */
 }
 
+function TyhjaSVG(props) {
+    /* jshint ignore: start */
+    return <span>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className={props.name}
+        version="1.1"
+        width="10"
+        height="10">
+    </svg>
+    </span>
+    /* jshint ignore: end */
+}
+
+function TyhjaSVGDropilla(props) {
+    /* jshint ignore: start */
+    return <span onDragOver={props.teeDragOver} onDrop={props.teeDrop}>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className={props.name}
+        version="1.1"
+        width="10"
+        height="10">
+    </svg>
+    </span>
+    /* jshint ignore: end */
+}
+
 /**
- * 
+ * Luo svg-nappulan, jolle antaa classiksi annetun nimen
+ * ja väriksi annetun värin
  * @param {Object} props .color="white" tai .color="black" 
  * @returns svg-nappula
  */
@@ -581,24 +609,6 @@ function Pelimerkki(props) {
     /* jshint ignore:end */
 }
 
-// ----------- testi grafiikoista -----------
-
-function Testi(props) {
-    /* jshint ignore:start */
-    return (
-        <div>
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="hbar"
-                version="1.1"
-                width="100"
-                height="100">
-                <circle cx="50" cy="50" r="10" fill="white" />
-            </svg>
-        </div>
-    )
-    /* jshint ignore:end */
-}
 
 // ----------- roottiin lisääminen -----------
 
