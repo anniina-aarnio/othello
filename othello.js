@@ -387,8 +387,8 @@ function Ruutu(props) {
     };
 
     /* jshint ignore: start */
-    let musta = <Musta />;
-    let valkoinen = <Valkoinen />;
+    let musta = <Nappula color="black" />;
+    let valkoinen = <Nappula color="white" />;
     let tyhja = <Tyhja />;
     let tyhjaDropilla = <TyhjaDropilla teeDragOver={dragOver} teeDrop={drop}/>;
 
@@ -440,13 +440,37 @@ function TyhjaDropilla(props) {
 
 function Valkoinen(props) {
     /* jshint ignore: start */
-    return <label className="valkoinen">O</label>
+    return <span>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="valkoinen"
+        version="1.1"
+        width="10"
+        height="10">
+        <circle cx="5" cy="5" r="4" fill="white" />
+    </svg>
+    </span>
     /* jshint ignore: end */
 }
 
 function Musta(props) {
     /* jshint ignore: start */
     return <label className="musta">X</label>
+    /* jshint ignore: end */
+}
+
+function Nappula(props) {
+    /* jshint ignore: start */
+    return <span>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="valkoinen"
+        version="1.1"
+        width="10"
+        height="10">
+        <circle cx="5" cy="5" r="4" fill={props.color} />
+    </svg>
+    </span>
     /* jshint ignore: end */
 }
 
@@ -580,9 +604,9 @@ function Testi(props) {
                 xmlns="http://www.w3.org/2000/svg"
                 className="hbar"
                 version="1.1"
-                width="300"
-                height="200">
-                <circle cx="150" cy="100" r="80" fill="white" />
+                width="100"
+                height="100">
+                <circle cx="50" cy="50" r="10" fill="white" />
             </svg>
         </div>
     )
