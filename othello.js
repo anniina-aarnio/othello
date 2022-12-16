@@ -387,8 +387,8 @@ function Ruutu(props) {
     };
 
     /* jshint ignore: start */
-    let musta = <Nappula color="black" />;
-    let valkoinen = <Nappula color="white" />;
+    let musta = <Nappula name="musta" color="black" />;
+    let valkoinen = <Nappula name="valkoinen" color="white" />;
     let tyhja = <Tyhja />;
     let tyhjaDropilla = <TyhjaDropilla teeDragOver={dragOver} teeDrop={drop}/>;
 
@@ -438,33 +438,17 @@ function TyhjaDropilla(props) {
     /* jshint ignore: end */
 }
 
-function Valkoinen(props) {
-    /* jshint ignore: start */
-    return <span>
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="valkoinen"
-        version="1.1"
-        width="10"
-        height="10">
-        <circle cx="5" cy="5" r="4" fill="white" />
-    </svg>
-    </span>
-    /* jshint ignore: end */
-}
-
-function Musta(props) {
-    /* jshint ignore: start */
-    return <label className="musta">X</label>
-    /* jshint ignore: end */
-}
-
+/**
+ * 
+ * @param {Object} props .color="white" tai .color="black" 
+ * @returns svg-nappula
+ */
 function Nappula(props) {
     /* jshint ignore: start */
     return <span>
     <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="valkoinen"
+        className={props.name}
         version="1.1"
         width="10"
         height="10">
@@ -568,27 +552,30 @@ function Pelimerkki(props) {
     let dragEnd = function(event) {
     };
 
+    let vari = "";
+    if (props.color == "valkoinen") {
+        vari = "white";
+    } else {
+        vari = "black";
+    }
 
     /* jshint ignore:start */
     if (props.vuoro == props.color) {
 
         return (
-            <label
-                name={props.color}
-                className={props.color}
-                draggable="true"
-                onDragStart={dragStart}
-                onDragEnd={dragEnd}>
-                    {props.merkki}
-            </label>
+            <div name={props.color} className={props.color} draggable="true" onDragEnd={dragEnd} onDragStart={dragStart} merkki={props.merkki}>
+                <Nappula
+                    name={props.color}
+                    color={props.color == "valkoinen" ? "white" : "black"} />
+            </div>
         )        
     } else {
         return (
-            <label
-                name={props.color}
-                className={props.color}>
-                    {props.merkki}
-            </label>
+            <div name={props.color} className={props.color}>
+                <Nappula
+                    name={props.color}
+                    color={props.color == "valkoinen" ? "white" : "black"} />
+            </div>
         )   
     }
     /* jshint ignore:end */
