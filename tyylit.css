@@ -11,6 +11,11 @@ h2 {
     text-align: center;
 }
 
+div {
+    margin:0;
+    padding:0;
+}
+
 
 /* Pelikokonaisuus */
 #pelikokonaisuus {
@@ -33,8 +38,11 @@ h2 {
 
 /* Peliruutu */
 .peliruutu, .tiputus {
-    size: auto;
+    display: inline-block;
     border: 1px solid black;
+    margin: .3em;
+    width: 3em;
+    height: 3em;
 }
 
 .tiputus {
