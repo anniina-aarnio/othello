@@ -434,8 +434,8 @@ function TyhjaSVG(props) {
         xmlns="http://www.w3.org/2000/svg"
         className={props.name}
         version="1.1"
-        width="10"
-        height="10">
+        width="100"
+        height="100">
     </svg>
     </div>
     /* jshint ignore: end */
@@ -448,8 +448,8 @@ function TyhjaSVGDropilla(props) {
         xmlns="http://www.w3.org/2000/svg"
         className={props.name}
         version="1.1"
-        width="10"
-        height="10">
+        width="100"
+        height="100">
     </svg>
     </div>
     /* jshint ignore: end */
@@ -468,9 +468,9 @@ function Nappula(props) {
         xmlns="http://www.w3.org/2000/svg"
         className={props.name}
         version="1.1"
-        width="10"
-        height="10">
-        <circle cx="5" cy="5" r="4" fill={props.color} />
+        width="100"
+        height="100">
+        <circle cx="50" cy="50" r="40" fill={props.color} />
     </svg>
     </div>
     /* jshint ignore: end */
