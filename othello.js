@@ -262,8 +262,10 @@ function Pelikokonaisuus(props) {
         let voittaja = "";
         if (pisteet.pelaaja1 > pisteet.pelaaja2) {
             voittaja = "pelaaja1";
-        } else {
+        } else if (pisteet.pelaaja1 < pisteet.pelaaja2) {
             voittaja = "pelaaja2";
+        } else {
+            voittaja = "";
         }
         props.lopetus(voittaja);
     /* jshint ignore:end*/
