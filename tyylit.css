@@ -32,14 +32,12 @@ h2 {
 }
 
 /* Peliruutu */
-.peliruutu {
-    margin: .1em;
+.peliruutu, .tiputus {
     size: auto;
+    border: 1px solid black;
 }
 
 .tiputus {
-    margin: .1em;
-    size: auto;
     background-color: lightgreen;
 }
 

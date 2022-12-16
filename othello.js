@@ -393,53 +393,41 @@ function Ruutu(props) {
 
     // tyhjä tai reunapala jolla ei muuta tietoa
     if (props.sisalto == " " || props.sisalto == "r") {
-        return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)
+        return (<label id={props.id} className="peliruutu">{tyhja}</label>)
     // jos X
     }else if (props.sisalto === "X") {
-        return (<label id={props.id} className="peliruutu">[{musta}]</label>)
+        return (<label id={props.id} className="peliruutu">{musta}</label>)
     // jos O
     } else if (props.sisalto === "O") {
-        return (<label id={props.id} className="peliruutu">[{valkoinen}]</label>)
+        return (<label id={props.id} className="peliruutu">{valkoinen}</label>)
     // jos mustan vuoro
     } else if (props.vuoro == "musta") {
         // jos mahdollinen paikka mustalle
         if (props.sisalto === "x") {
             return (<label id={props.id}
-                className="tiputus">[{tyhjaDropilla}]</label>)
+                className="tiputus">{tyhjaDropilla}</label>)
         // jos ei mahdollinen paikka mustalle
         } else {
-            return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)
+            return (<label id={props.id} className="peliruutu">{tyhja}</label>)
         }
     // jos valkoisen vuoro
     } else if (props.vuoro == "valkoinen") {
         // ja valkoiselle mahdollinen paikka
         if (props.sisalto === "o") {
             return (<label id={props.id}
-                className="tiputus">[{tyhjaDropilla}]</label>)            
+                className="tiputus">{tyhjaDropilla}</label>)            
         } else {
-            return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)            
+            return (<label id={props.id} className="peliruutu">{tyhja}</label>)            
         }
     }
     // jos jokin ihme tilanne joka ei ylempänä selviä
-    return (<label id={props.id} className="peliruutu">[{tyhja}]</label>)
-    /* jshint ignore: end */
-}
-
-function Tyhja(props) {
-    /* jshint ignore: start */
-    return <label name="tyhja"> </label>
-    /* jshint ignore: end */
-}
-
-function TyhjaDropilla(props) {
-    /* jshint ignore: start */
-    return <label onDragOver={props.teeDragOver} onDrop={props.teeDrop} name="tyhja"> </label>
+    return (<label id={props.id} className="peliruutu">{tyhja}</label>)
     /* jshint ignore: end */
 }
 
 function TyhjaSVG(props) {
     /* jshint ignore: start */
-    return <span>
+    return <span id={props.id}>
     <svg
         xmlns="http://www.w3.org/2000/svg"
         className={props.name}
