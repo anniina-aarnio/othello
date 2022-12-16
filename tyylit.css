@@ -21,30 +21,28 @@ div {
 #pelikokonaisuus {
     display: flex;
     justify-content: center;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 }
 
 /* Pelilauta */
 #pelilauta {
     border: 1px solid white;
-    display: block;
     width: fit-content;
 }
 
-#pelilauta > div {
-    display: block;
-}
 
 /* Peliruutu */
 .peliruutu, .tiputus {
     display: inline-block;
-    border: 1px solid black;
-    margin: .3em;
 }
 
 .tiputus {
     background-color: lightgreen;
+}
+
+.peliruutu2 {
+    align-items: center;
 }
 
 td {

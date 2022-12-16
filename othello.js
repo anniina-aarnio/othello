@@ -86,7 +86,6 @@ function App(props) {
     /* jshint ignore: start */
     return (
         <div>
-            <h1>Othello</h1>
             <PiiloutuvaLomake
                 lomakeNakyvissa={lomake.nakyvissa}
                 lomake={lomake}
@@ -486,7 +485,8 @@ function Pelilauta2(props) {
         let ruutuja = [];
         for (let j = 0; j < props.koko; j++) {
             let id = "x"+ j +"-" + "y" + "i";
-            ruutuja.push(<td key={id} id={id}>{props.ruudut[i][j]}</td>)
+            let ruutu = <Ruutu2 vuoro={props.vuoro} sisalto={props.ruudut[i][j]} muutaSisaltoa={props.muutaSisaltoa} />
+            ruutuja.push(<td key={id} id={id}>{ruutu}</td>)
         }
         riveja.push(<tr key={i}>{ruutuja}</tr>)
     }
@@ -496,6 +496,12 @@ function Pelilauta2(props) {
             {riveja}
         </tbody>
     </table>
+    /* jshint ignore: end */
+}
+
+function Ruutu2(props) {
+    /* jshint ignore: start */
+    return <div className="peliruutu2">{props.sisalto}</div>
     /* jshint ignore: end */
 }
 
