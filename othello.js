@@ -275,7 +275,7 @@ function Pelikokonaisuus(props) {
     /* jshint ignore:start*/
     return (
         <div id="pelikokonaisuus">
-            <Pelilauta
+            <Pelilauta2
                 koko={props.koko}
                 ruudut={ruudut}
                 muutaSisaltoa={handleChange}
@@ -473,6 +473,26 @@ function Nappula(props) {
         <circle cx="50" cy="50" r="40" fill={props.color} />
     </svg>
     </div>
+    /* jshint ignore: end */
+}
+
+function Pelilauta2(props) {
+    /* jshint ignore: start */
+    let riveja = [];
+    for (let i = 0; i < props.koko; i++) {
+        let ruutuja = [];
+        for (let j = 0; j < props.koko; j++) {
+            let id = "x"+ j +"-" + "y" + "i";
+            ruutuja.push(<td key={id} id={id}></td>)
+        }
+        riveja.push(<tr key={i}>{ruutuja}</tr>)
+    }
+
+    return <table>
+        <tbody id="pelilauta">
+            {riveja}
+        </tbody>
+    </table>
     /* jshint ignore: end */
 }
 

@@ -47,6 +47,12 @@ div {
     background-color: lightgreen;
 }
 
+td {
+    border: 1px solid black;
+    min-width: 20px;
+    min-height: 20px;
+}
+
 /* Pelilaudan vieressä */
 
 #sivuosa {
