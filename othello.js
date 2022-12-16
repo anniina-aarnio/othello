@@ -180,7 +180,7 @@ function PiiloutuvaLomake(props) {
     }
 
     return (
-        <h2>Let's play!</h2>
+        <div></div>
     )
     /* jshint ignore: end */
 }
