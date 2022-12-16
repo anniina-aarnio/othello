@@ -100,6 +100,7 @@ function App(props) {
                 pelaaja2={lomake.pelaaja2}
                 lopetus={handleLoppu}
                 voittaja={lomake.voittaja}/>
+            <Testi />
         </div>
     )
     /* jshint ignore: end */
@@ -566,6 +567,25 @@ function Pelimerkki(props) {
             </label>
         )   
     }
+    /* jshint ignore:end */
+}
+
+// ----------- testi grafiikoista -----------
+
+function Testi(props) {
+    /* jshint ignore:start */
+    return (
+        <div>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="hbar"
+                version="1.1"
+                width="300"
+                height="200">
+                <circle cx="150" cy="100" r="80" fill="white" />
+            </svg>
+        </div>
+    )
     /* jshint ignore:end */
 }
 
