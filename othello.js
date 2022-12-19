@@ -238,7 +238,7 @@ function Pelikokonaisuus(props) {
         // jos kumpikaan ei voi enää laittaa joko asemoinnin vuoksi
         // tai siksi että tyhjiä paikkoja ei enää ole
         if (mahdollisiaPaikkoja.kummallakaanEiVuoroa) {
-            loppu();
+            loppu(uudetRuudut);
         }
     };
 
@@ -256,12 +256,27 @@ function Pelikokonaisuus(props) {
         }
     }
 
-        
-    function loppu() {
+    /**
+     * Laskee voittajan viimeisimmän taulukon perusteella,
+     * ja lähettää Appin hoideltavaksi voittajan ilmoituksen
+     * props.lopetus-funktion avulla
+     * @param {Array} viimeisinTaulukkoMuutoksilla 
+     */
+    function loppu(viimeisinTaulukkoMuutoksilla) {
         let voittaja = "";
-        if (pisteet.pelaaja1 > pisteet.pelaaja2) {
+        let loppupisteet = {pelaaja1: 0, pelaaja2: 0};
+        for (let i = 0; i < props.koko; i++) {
+            for (let j = 0; j < props.koko; j++) {
+                if (viimeisinTaulukkoMuutoksilla[i][j] === "X") {
+                    loppupisteet.pelaaja1 += 1;
+                } else if (viimeisinTaulukkoMuutoksilla[i][j] === "O") {
+                    loppupisteet.pelaaja2 += 1;
+                }
+            }
+        }
+        if (loppupisteet.pelaaja1 > loppupisteet.pelaaja2) {
             voittaja = "pelaaja1";
-        } else if (pisteet.pelaaja1 < pisteet.pelaaja2) {
+        } else if (loppupisteet.pelaaja1 < loppupisteet.pelaaja2) {
             voittaja = "pelaaja2";
         } else {
             voittaja = "";

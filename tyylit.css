@@ -19,24 +19,36 @@ div {
 
 /* Pelikokonaisuus */
 #pelikokonaisuus {
+    position: absolute;
+    top: 0;
+    left: 0;
     display: flex;
     justify-content: center;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 }
 
 /* Pelilauta */
 #pelilauta {
+    position: relative;
     border: 1px solid white;
-    width: fit-content;
+    width: calc(100% - 10em);
+    height: 100%;
 }
 
+#pelilauta > div {
+    display: inline-block;
+    height: max-content;
+    width: max-content;
+}
 
 /* Peliruutu */
 .peliruutu, .tiputus {
-    display: inline-block;
     border: 1px solid black;
     margin: .1em;
+    width: max-content;
+    height:max-content;
 }
 
 .tiputus {
@@ -54,11 +66,16 @@ td {
     padding: 0;
 }
 
+svg {
+    position: relative;
+    box-sizing: inherit;
+}
+
 /* Pelilaudan vieressä */
 
 #sivuosa {
     border: 1px solid white;
-    width: 10%;
+    width: 10em;
     min-width:min-content;
 }
 
