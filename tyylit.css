@@ -87,3 +87,27 @@ div {
 .valkoinen {
     color: white;
 }
+
+@media only screen and (max-width: 800px) {
+    #pelilauta {
+        position: absolute;
+        top: 10em;
+        left:0;
+        width: 100%;
+        height: calc(100% - 10em);
+    }
+    #sivuosa {
+        position:absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 10em;
+        float: right;
+    }
+
+    #sivuosa > div {
+        display: block;
+        float: left;
+    }
+}
