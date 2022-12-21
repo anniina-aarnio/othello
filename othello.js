@@ -358,7 +358,7 @@ function Rivi(props) {
             />)
     }
     return (
-        <div style={{ height: "calc(1 /" + props.koko + " * 100% - " + props.koko + " * .2em)" }}>{osia}</div>
+        <div style={{ height: "calc(1 /" + props.koko + " * 100% - .6em)" }}>{osia}</div>
     )
     /* jshint ignore: end */
 }
@@ -408,7 +408,7 @@ function Ruutu(props) {
     let tyhja = <TyhjaSVG />;
     let tyhjaDropilla = <TyhjaSVGDropilla teeDragOver={dragOver} teeDrop={drop}/>;
 
-    let leveys = "calc(1 / "+ props.koko + " * 100% - " + props.koko + " * .1em)"
+    let leveys = "calc(1 / "+ props.koko + " * 100% - .4em)";
 
     // tyhjä tai reunapala jolla ei muuta tietoa
     if (props.sisalto == " " || props.sisalto == "r") {

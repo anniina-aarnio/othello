@@ -38,10 +38,10 @@ div {
 
 #pelilauta > div {
     position: relative;
-    display: block;
+    display: inline-block;
     width: 100%;
-    margin-top: .6em;
-    margin-bottom: .6em;
+    margin-top: .3em;
+    margin-bottom: .3em;
 }
 
 /* Peliruutu */
@@ -61,9 +61,9 @@ div {
     position: absolute;
     left:0;
     top:0;
-    width: calc( 100% - 2px);
-    height:calc( 100% - 2px);
-    border: 1px solid black;
+    width: calc( 100% - 4px);
+    height:calc( 100% - 4px);
+    border: 2px solid black;
 }
 
 /* Pelilaudan vieressä */
