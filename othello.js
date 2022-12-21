@@ -358,7 +358,7 @@ function Rivi(props) {
             />)
     }
     return (
-        <div style={{ height: "calc(1 /" + props.koko + " * 100% - " + props.koko + " * .1em)" }}>{osia}</div>
+        <div style={{ height: "calc(1 /" + props.koko + " * 100% - " + props.koko + " * .2em)" }}>{osia}</div>
     )
     /* jshint ignore: end */
 }
