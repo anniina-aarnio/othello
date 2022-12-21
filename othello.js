@@ -354,10 +354,11 @@ function Rivi(props) {
                 vuoro={props.vuoro}
                 sisalto={props.sisallot[i]}
                 muutaSisaltoa={props.muutaSisaltoa}
+                koko={props.koko}
             />)
     }
     return (
-        <div>{osia}</div>
+        <div koko={props.koko}>{osia}</div>
     )
     /* jshint ignore: end */
 }
@@ -464,7 +465,7 @@ function TyhjaSVGDropilla(props) {
         version="1.1"
         width="100"
         height="100"
-        style={{backgroundColor:"lightgreen"}}>
+        style={{backgroundColor:"#139b14"}}>
     </svg>
     </div>
     /* jshint ignore: end */
@@ -485,7 +486,7 @@ function Nappula(props) {
         version="1.1"
         width="100"
         height="100">
-        <circle cx="50" cy="50" r="40" fill={props.color} />
+        <circle cx="50" cy="50" r="50" fill={props.color} />
     </svg>
     </div>
     /* jshint ignore: end */

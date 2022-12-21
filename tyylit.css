@@ -38,33 +38,24 @@ div {
 }
 
 #pelilauta > div {
-    display: inline-block;
-    height: max-content;
-    width: max-content;
+    display: block;
+    width: 100%;
+    height: calc( 1 / attr(koko number, 4) * 100% - attr(koko number, 4) * 0.1em);
 }
 
 /* Peliruutu */
 .peliruutu, .tiputus {
+    display: inline-block;
     border: 1px solid black;
     margin: .1em;
-    width: max-content;
-    height:max-content;
+    width: calc( 1 / attr(koko number, 4) * 100% - attr(koko number, 4) * 0.1em );
+    height: 100%;
 }
 
 .tiputus {
     background-color: lightgreen;
 }
 
-.peliruutu2 {
-    align-items: center;
-}
-
-td {
-    border: 1px solid black;
-    min-width: 20px;
-    min-height: 20px;
-    padding: 0;
-}
 
 svg {
     position: relative;
