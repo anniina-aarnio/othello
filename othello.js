@@ -354,10 +354,11 @@ function Rivi(props) {
                 vuoro={props.vuoro}
                 sisalto={props.sisallot[i]}
                 muutaSisaltoa={props.muutaSisaltoa}
+                koko={props.koko}
             />)
     }
     return (
-        <div style={{ height: "calc(1 /" + props.koko + " * 99%)" }}>{osia}</div>
+        <div style={{ height: "calc(1 /" + props.koko + " * 100% - " + props.koko + " * .1em)" }}>{osia}</div>
     )
     /* jshint ignore: end */
 }
@@ -407,39 +408,39 @@ function Ruutu(props) {
     let tyhja = <TyhjaSVG />;
     let tyhjaDropilla = <TyhjaSVGDropilla teeDragOver={dragOver} teeDrop={drop}/>;
 
-    let korkeus = "calc(1 / props.koko * 99%)";
+    let leveys = "calc(1 / "+ props.koko + " * 100% - " + props.koko + " * .1em)"
 
     // tyhjä tai reunapala jolla ei muuta tietoa
     if (props.sisalto == " " || props.sisalto == "r") {
-        return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{tyhja}</div>)
+        return (<div style={{width: leveys}} id={props.id} className="peliruutu">{tyhja}</div>)
     // jos X
     }else if (props.sisalto === "X") {
-        return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{musta}</div>)
+        return (<div style={{width: leveys}} id={props.id} className="peliruutu">{musta}</div>)
     // jos O
     } else if (props.sisalto === "O") {
-        return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{valkoinen}</div>)
+        return (<div style={{width: leveys}} id={props.id} className="peliruutu">{valkoinen}</div>)
     // jos mustan vuoro
     } else if (props.vuoro == "musta") {
         // jos mahdollinen paikka mustalle
         if (props.sisalto === "x") {
-            return (<div style={{height: korkeus}} id={props.id}
+            return (<div style={{width: leveys}} id={props.id}
                 className="tiputus">{tyhjaDropilla}</div>)
         // jos ei mahdollinen paikka mustalle
         } else {
-            return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{tyhja}</div>)
+            return (<div style={{width: leveys}} id={props.id} className="peliruutu">{tyhja}</div>)
         }
     // jos valkoisen vuoro
     } else if (props.vuoro == "valkoinen") {
         // ja valkoiselle mahdollinen paikka
         if (props.sisalto === "o") {
-            return (<div style={{height: korkeus}} id={props.id}
+            return (<div style={{width: leveys}} id={props.id}
                 className="tiputus">{tyhjaDropilla}</div>)            
         } else {
-            return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{tyhja}</div>)            
+            return (<div style={{width: leveys}} id={props.id} className="peliruutu">{tyhja}</div>)            
         }
     }
     // jos jokin ihme tilanne joka ei ylempänä selviä
-    return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{tyhja}</div>)
+    return (<div style={{width: leveys}} id={props.id} className="peliruutu">{tyhja}</div>)
     /* jshint ignore: end */
 }
 
