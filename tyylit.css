@@ -38,9 +38,9 @@ div {
 }
 
 #pelilauta > div {
+    position: relative;
     display: block;
     width: 100%;
-    height: calc( 1 / attr(koko number, 4) * 100% - attr(koko number, 4) * 0.1em);
 }
 
 /* Peliruutu */
@@ -48,7 +48,6 @@ div {
     display: inline-block;
     border: 1px solid black;
     margin: .1em;
-    width: calc( 1 / attr(koko number, 4) * 100% - attr(koko number, 4) * 0.1em );
     height: 100%;
 }
 
@@ -57,10 +56,6 @@ div {
 }
 
 
-svg {
-    position: relative;
-    box-sizing: inherit;
-}
 
 /* Pelilaudan vieressä */
 

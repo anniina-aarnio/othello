@@ -354,11 +354,10 @@ function Rivi(props) {
                 vuoro={props.vuoro}
                 sisalto={props.sisallot[i]}
                 muutaSisaltoa={props.muutaSisaltoa}
-                koko={props.koko}
             />)
     }
     return (
-        <div koko={props.koko}>{osia}</div>
+        <div style={{ height: "calc(1 /" + props.koko + " * 99%)" }}>{osia}</div>
     )
     /* jshint ignore: end */
 }
@@ -408,37 +407,39 @@ function Ruutu(props) {
     let tyhja = <TyhjaSVG />;
     let tyhjaDropilla = <TyhjaSVGDropilla teeDragOver={dragOver} teeDrop={drop}/>;
 
+    let korkeus = "calc(1 / props.koko * 99%)";
+
     // tyhjä tai reunapala jolla ei muuta tietoa
     if (props.sisalto == " " || props.sisalto == "r") {
-        return (<div id={props.id} className="peliruutu">{tyhja}</div>)
+        return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{tyhja}</div>)
     // jos X
     }else if (props.sisalto === "X") {
-        return (<div id={props.id} className="peliruutu">{musta}</div>)
+        return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{musta}</div>)
     // jos O
     } else if (props.sisalto === "O") {
-        return (<div id={props.id} className="peliruutu">{valkoinen}</div>)
+        return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{valkoinen}</div>)
     // jos mustan vuoro
     } else if (props.vuoro == "musta") {
         // jos mahdollinen paikka mustalle
         if (props.sisalto === "x") {
-            return (<div id={props.id}
+            return (<div style={{height: korkeus}} id={props.id}
                 className="tiputus">{tyhjaDropilla}</div>)
         // jos ei mahdollinen paikka mustalle
         } else {
-            return (<div id={props.id} className="peliruutu">{tyhja}</div>)
+            return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{tyhja}</div>)
         }
     // jos valkoisen vuoro
     } else if (props.vuoro == "valkoinen") {
         // ja valkoiselle mahdollinen paikka
         if (props.sisalto === "o") {
-            return (<div id={props.id}
+            return (<div style={{height: korkeus}} id={props.id}
                 className="tiputus">{tyhjaDropilla}</div>)            
         } else {
-            return (<div id={props.id} className="peliruutu">{tyhja}</div>)            
+            return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{tyhja}</div>)            
         }
     }
     // jos jokin ihme tilanne joka ei ylempänä selviä
-    return (<div id={props.id} className="peliruutu">{tyhja}</div>)
+    return (<div style={{height: korkeus}} id={props.id} className="peliruutu">{tyhja}</div>)
     /* jshint ignore: end */
 }
 
@@ -486,95 +487,9 @@ function Nappula(props) {
         version="1.1"
         width="100"
         height="100">
-        <circle cx="50" cy="50" r="50" fill={props.color} />
+        <circle cx="50" cy="50" r="50" fill={props.color}/>
     </svg>
     </div>
-    /* jshint ignore: end */
-}
-
-function Pelilauta2(props) {
-
-    /* jshint ignore: start */
-
-
-    let riveja = [];
-    for (let i = 0; i < props.koko; i++) {
-        let ruutuja = [];
-        for (let j = 0; j < props.koko; j++) {
-            let id = "x"+ j +"-" + "y" + "i";
-            let ruutu = <Ruutu2
-                            vuoro={props.vuoro}
-                            sisalto={props.ruudut[i][j]}
-                            muutaSisaltoa={props.muutaSisaltoa} />
-            ruutuja.push(<td key={id} id={id}>{ruutu}</td>)
-        }
-        riveja.push(<tr key={i}>{ruutuja}</tr>)
-    }
-
-    // palautetaan table, jossa taulukon sisällöt
-    return <table>
-        <tbody id="pelilauta">
-            {riveja}
-        </tbody>
-    </table>
-    /* jshint ignore: end */
-}
-
-function Ruutu2(props) {
-    // mitä tekee kun raahataan X tai O sivusta päälle
-    let dragOver = function (event) {
-        event.preventDefault();
-        // jos raahattava on mustan nappula
-        if (event.dataTransfer.types.includes("musta")) {
-            event.dataTransfer.dropEffect = "move";
-        // jos raahattava on valkoisen nappula
-        } else if (event.dataTransfer.types.includes("valkoinen")) {
-            event.dataTransfer.dropEffect = "move";
-        // jos raahattava on mitä tahansa muuta
-        } else {
-            event.dataTransfer.dropEffect = "none";
-        }
-    };
-
-    // mitä tekee kun tiputtaa X tai O sivusta päälle
-    let drop = function (event) {
-        event.preventDefault();
-        let dataMusta = event.dataTransfer.getData("musta");
-        let dataValkoinen = event.dataTransfer.getData("valkoinen");
-        let ruutu = ruudunKoordinaatit(event.target.parentElement.parentElement.id);
-        if (dataMusta) {
-            props.muutaSisaltoa(ruutu, "X");
-        } else if (dataValkoinen) {
-            props.muutaSisaltoa(ruutu, "O");
-        } else {
-            console.log("drop jokin muu tiputus");
-        }
-    };
-
-    /* jshint ignore: start */
-    let taytto;
-    if (props.sisalto == "X") {
-        taytto = <Nappula name="musta" color="black"/>
-    } else if (props.sisalto == "O") {
-        taytto = <Nappula name="valkoinen" color="white" />
-    } else if (props.vuoro == "musta") {
-        if (props.sisalto == "x") {
-            taytto = <TyhjaSVGDropilla name="droppi" teeDragOver={dragOver} teeDrop={drop} />
-        } else {
-            taytto = <TyhjaSVG name="tyhja" />
-        }
-    } else if (props.vuoro == "valkoinen") {
-        if (props.sisalto == "o") {
-            taytto = <TyhjaSVGDropilla name="droppi" teeDragOver={dragOver} teeDrop={drop} />
-        } else {
-            taytto = <TyhjaSVG name="tyhja" />
-        }
-    } else {
-        taytto = <TyhjaSVG name="tyhja"/>
-    }
-
-
-    return <div className="peliruutu2">{taytto}</div>
     /* jshint ignore: end */
 }
 
