@@ -452,7 +452,8 @@ function TyhjaSVG(props) {
         className={props.name}
         version="1.1"
         width="100"
-        height="100">
+        height="100"
+        viewBox="0 0 100 100">
     </svg>
     </div>
     /* jshint ignore: end */
@@ -467,6 +468,7 @@ function TyhjaSVGDropilla(props) {
         version="1.1"
         width="100"
         height="100"
+        viewBox="0 0 100 100"
         style={{backgroundColor:"#139b14"}}>
     </svg>
     </div>
@@ -487,7 +489,8 @@ function Nappula(props) {
         className={props.name}
         version="1.1"
         width="100"
-        height="100">
+        height="100"
+        viewBox="0 0 100 100">
         <circle cx="50" cy="50" r="50" fill={props.color}/>
     </svg>
     </div>
